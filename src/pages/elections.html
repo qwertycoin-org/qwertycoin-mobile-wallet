@@ -1,0 +1,27 @@
+<div id="app" class="body-root" v-cloak="">
+    <div class="body-header">
+        <div class="header-title">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{ $t("electionsPage.title")}}
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="panel nopadding">
+            <div class="body">
+                <div class="header-title">
+                    
+                </div>
+                <div class="content">
+                    <table>
+                        <template v-for="election in elections" v_if="elections.length !== 0">
+                            <tr>
+                               <td>{{ election.question }}</td>
+
+                            </tr>
+                        </template>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

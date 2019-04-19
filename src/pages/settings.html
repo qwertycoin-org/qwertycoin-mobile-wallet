@@ -1,0 +1,116 @@
+<div id="app" class="body-root" v-cloak="">
+	<div class="body-header">
+		<div class="header-title">
+			<i class="fa fa-cog" aria-hidden="true"></i> {{ $t("settingsPage.title") }}
+		</div>
+		<div class="header-subtitle">
+			{{ $t("settingsPage.subtitle") }}
+		</div>
+	</div>
+	<div class="body-content">
+		<div class="panel">
+			<div class="body">
+				<div class="content">
+					<div class="field">
+						<label>{{ $t("settingsPage.settingsBlock.language.label") }}</label>
+						<select v-model="language">
+							<option value="en">English</option>
+							<option value="sr">Српски (Serbian)</option>
+							<option value="de">Deutsch</option>
+							<option value="fr">Français</option>
+							<option value="it">Italian</option>
+							<option value="hu">Magyar (Hungarian(</option>
+							<option value="gr">Ελληνικά (Greek)</option>
+							<option value="ru">Русский (Russian)</option>
+							<option value="uk">Українська (Ukrainian)</option>
+							<option value="fa">فارسی (Persian)</option>
+							<option value="ja">日本人 (Japanese)</option>
+							<option value="zh">中文 (Chinese)</option>
+							<option value="ko">한국어 (Korean)</option>
+							<option value="ar">عربى (Arabic)</option>
+							<option value="hi">हदी (Hindi)</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel">
+			<div class="body">
+				<div class="content">
+					<div class="field">
+						<label>{{ $t("settingsPage.settingsBlock.speed.label") }}</label>
+						<select v-model="readSpeed">
+							<option value="1">{{ $t("settingsPage.settingsBlock.speed.fastest") }}</option>
+							<option value="2">{{ $t("settingsPage.settingsBlock.speed.fast") }}</option>
+							<option value="5">{{ $t("settingsPage.settingsBlock.speed.medium") }}</option>
+							<option value="10">{{ $t("settingsPage.settingsBlock.speed.slow") }}</option>
+						</select>
+					</div>
+					<!--
+					<div class="field checkbox toggle">
+						<input type="checkbox" name="public" v-model="checkMinerTx">
+						<label>{{ $t("settingsPage.settingsBlock.readMinerTx.label") }}</label>
+					</div>
+					-->
+				</div>
+			</div>
+		</div>
+
+		<div class="panel">
+			<div class="body">
+				<div class="content">
+					<div class="field">
+						<label>{{ $t("settingsPage.walletSettings.creationHeight.label") }}</label>
+						<input type="number" v-model="creationHeight" />
+					</div>
+					<div class="field">
+						<label>{{ $t("settingsPage.walletSettings.currentScanningHeight.label") }}</label>
+						<input type="number" v-model="scanHeight" />
+					</div>
+					<div class="actions tc">
+						<button @click="updateWalletSettings()"
+							class="btn">{{ $t("settingsPage.walletSettings.updateButton") }}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel inline">
+			<div class="body">
+				<div class="content tc">
+					<a href="#!changeWalletPassword" class="btn">{{ $t("settingsPage.changePasswordButton") }}</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel inline">
+			<div class="body">
+				<div class="content">
+					<button class="btn"
+						@click="removeAllContacts()">{{ $t("settingsPage.deleteContactsButton") }}</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="panel inline">
+			<div class="body">
+				<div class="content tc">
+					<button class="btn" @click="deleteWallet()">{{ $t("settingsPage.deleteWalletButton") }}</button>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="panel inline" v-if="nativeVersionCode !== 0">
+			<div class="body">
+				<div class="content">
+					<div>{{ $t("settingsPage.versionBlock.versionAppName") }}{{nativeAppName}}</div>
+					<div>{{ $t("settingsPage.versionBlock.versionNumber") }}{{nativeVersionNumber}}</div>
+					<div>{{ $t("settingsPage.versionBlock.versionCode") }}{{nativeVersionCode}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

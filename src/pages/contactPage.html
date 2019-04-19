@@ -1,0 +1,40 @@
+<div id="app" class="body-root" v-cloak="">
+    <div class="body-header">
+        <div class="header-title">
+            <i class="fa fa-address-card-o" aria-hidden="true"></i> {{ $t("contactPage.title") }}
+        </div>
+        <div class="header-subtitle">
+            {{ $t("contactPage.subtitle") }}
+        </div>
+    </div>
+    <div class="body-content">
+        <div class="panel nopadding">
+            <div class="body">
+                <div class="header-title">{{ $t("contactPage.contactBlock.title") }} 
+                    <a href="#!addContact" class="btn tiny"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                </div>
+                <div class="content">
+                    <div class="contacts" id="accountContacts">
+                        <table>
+                            <template v-for="contact of contacts" v_if="contacts.length !== 0">
+                                <tr class="contact">
+                                    <td class="contact-icon"><i class="fa fa-user" aria-hidden="true"></i></td>
+                                    <td class="contactname">{{ contact.Name }}</td>
+                                    <td class="contactinfo"><i class="fa fa-search" aria-hidden="true" @click="contactDetails(contact)"></i></td>
+                                </tr>
+                            </template>
+                            <tr v-if="contacts.length == 0">
+                                <td colspan="4" class="noContacts">
+                                    {{ $t("contactPage.contactBlock.noContacts") }} <br/>
+                                    <div class="actions tc">
+                                        <a href="#addContact" class="btn">{{ $t("contactPage.contactBlock.getNewContacts") }}</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
