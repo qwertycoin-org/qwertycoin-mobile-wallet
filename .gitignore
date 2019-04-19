@@ -1,0 +1,9 @@
+.idea
+*.iml
+node_modules
+platforms
+plugins
+www/
+_www/
+package-lock.json
+requests/
