@@ -7,6 +7,7 @@ The projects are sharing the same [Translation Repository](https://github.com/qw
 
 If you find some bugs feel free to create an Issue.
 
+
 # Technologies
 The project is build using Apache Cordova and wraps the webwallet and adds native functionalities for a better user experience.  
 Most of the code is then handled by this other project.
@@ -36,3 +37,7 @@ To launch the Android app you will need to launch
 ```
 cordova run android
 ```
+
+## Our app is now available on Google Play:
+
+<a href="https://play.google.com/store/apps/details?id=org.qwertycoin.wallet"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200"></a>
