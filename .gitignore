@@ -7,3 +7,13 @@ www/
 _www/
 package-lock.json
 requests/
+
+src/*.js
+src/d/*.js
+src/lib/numberslab/*.js
+src/model/*.js
+src/model/blockchain/*.js
+src/pages/*.js
+src/providers/*.js
+src/utils/*.js
+src/workers/*.js

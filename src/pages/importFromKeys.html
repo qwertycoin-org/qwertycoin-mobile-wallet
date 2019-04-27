@@ -22,8 +22,11 @@
 						<input type="password" name="public" v-model="password">
 						<div v-if="insecurePassword && !forceInsecurePassword" class="message error">
 							{{ $t("global.passwordInvalidRequirements") }}
+							<br>
+							{{ $t("global.disableSecurity") }}
+							<br>
 							<div class="tc">
-								<button @click="forceInsecurePasswordCheck()" class="btn mini">{{ $t("global.disableSecurity") }}</button>
+								<button @click="forceInsecurePasswordCheck()" class="btn mini">{{ $t("global.passwordNotComplexEnoughModal.confirmText") }}</button>
 							</div>
 						</div>
 					</div>

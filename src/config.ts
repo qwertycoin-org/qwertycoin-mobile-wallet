@@ -1,6 +1,9 @@
 let global: any = typeof window !== 'undefined' ? window : self;
 global.config = {
-	apiUrl: typeof window !== 'undefined' && window.location ? window.location.href.substr(0, window.location.href.lastIndexOf('/') + 1) + 'api/' : 'https://myqwertycoin.com/api/',
+	apiUrl: [
+		"https://01.cache.myqwertycoin.com/",
+		"https://02.cache.myqwertycoin.com/"
+	],
 	electionApiUrl: "https://voting.qwertycoin.org/?api",
 	websiteApiUrl: "https://www.qwertycoin.org/wp-json",
 	mainnetExplorerUrl: "https://explorer.qwertycoin.org/",

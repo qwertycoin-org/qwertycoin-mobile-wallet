@@ -119,7 +119,6 @@ export class WalletRepository{
 		return Storage.remove('wallet');
 	}
 
-
 	static downloadEncryptedPdf(wallet : Wallet){
 		if(wallet.keys.priv.spend === '')
 			throw 'missing_spend';

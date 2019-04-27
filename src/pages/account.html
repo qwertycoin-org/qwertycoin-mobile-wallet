@@ -29,9 +29,10 @@
 				<div class="bar" :style="'width:'+((currentScanBlock+1)/blockchainHeight*100 | 0)+'%'">
 					{{(((currentScanBlock+1)/blockchainHeight*1000 | 0) / 10)}}%</div>
 				<label>
-					{{ $t("accountPage.synchronizingBlock.text") }} <span
-						class="currentScanBlock">{{currentScanBlock+1}}</span>/<span
-						class="blockchainHeight">{{blockchainHeight}}</span>
+					{{ $t("accountPage.synchronizingBlock.text") }} 
+					<span class="currentScanBlock">{{currentScanBlock+1}}</span>
+						/
+					<span class="blockchainHeight">{{blockchainHeight}}</span>
 				</label>
 			</div>
 		</div>

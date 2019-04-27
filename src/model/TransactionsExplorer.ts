@@ -19,19 +19,22 @@ import {Wallet} from "./Wallet";
 import {MathUtil} from "./MathUtil";
 import {CnUtilNative} from "./CnUtilNative";
 
-export const TX_EXTRA_PADDING_MAX_COUNT = 255;
-export const TX_EXTRA_NONCE_MAX_COUNT = 255;
+export const TX_EXTRA_PADDING_MAX_COUNT 			= 255;
+export const TX_EXTRA_NONCE_MAX_COUNT 				= 255;
 
-export const TX_EXTRA_TAG_PADDING = 0x00;
-export const TX_EXTRA_TAG_PUBKEY = 0x01;
-export const TX_EXTRA_NONCE = 0x02;
-export const TX_EXTRA_MERGE_MINING_TAG = 0x03;
-export const TX_EXTRA_TAG_ADDITIONAL_PUBKEYS = 0x04;
-export const TX_EXTRA_MYSTERIOUS_MINERGATE_TAG = 0xDE;
+export const TX_EXTRA_TAG_PADDING 					= 0x00;
+export const TX_EXTRA_TAG_PUBKEY 					= 0x01;
+export const TX_EXTRA_NONCE 						= 0x02;
+export const TX_EXTRA_MERGE_MINING_TAG 				= 0x03;
+export const TX_EXTRA_MESSAGE_TAG 					= 0x04;
+export const TX_EXTRA_TTL							= 0x05;
+export const TX_EXTRA_SENDER_TAG					= 0x06;
+export const TX_EXTRA_TAG_ADDITIONAL_PUBKEYS 		= 0x07;
+export const TX_EXTRA_MYSTERIOUS_MINERGATE_TAG 		= 0xDE;
 
 
-export const TX_EXTRA_NONCE_PAYMENT_ID = 0x00;
-export const TX_EXTRA_NONCE_ENCRYPTED_PAYMENT_ID = 0x01;
+export const TX_EXTRA_NONCE_PAYMENT_ID 				= 0x00;
+export const TX_EXTRA_NONCE_ENCRYPTED_PAYMENT_ID 	= 0x01;
 
 type RawOutForTx = {
 	keyImage: string,
