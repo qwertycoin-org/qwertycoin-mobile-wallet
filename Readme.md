@@ -1,4 +1,8 @@
-# Qwertycoin Mobile Wallet
+![image](https://cdn.qwertycoin.org/images/press/other/qwc-github-3.png)
+#### Master Build Status
+[![Build Status](https://travis-ci.org/qwertycoin-org/qwertycoin-mobile-wallet.svg?branch=master)](https://travis-ci.org/qwertycoin-org/qwertycoin-mobile-wallet)
+[![Build status](https://ci.appveyor.com/api/projects/status/udpsj8mf5x7s1rt6/branch/master?svg=true)](https://ci.appveyor.com/project/Qwertycoin/qwertycoin-mobile-wallet/branch/master)
+
 ExploShot's repository for the Android & Ios mobile wallet
 
 The project is based on the [official Qwertycoin webwallet](https://github.com/qwertycoin-org/webwallet-js).
@@ -41,3 +45,24 @@ cordova run android
 ## Our app is now available on Google Play:
 
 <a href="https://play.google.com/store/apps/details?id=org.qwertycoin.wallet"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200"></a>
+
+## Donate <a name="donate"></a>
+
+```
+QWC: QWC1K6XEhCC1WsZzT9RRVpc1MLXXdHVKt2BUGSrsmkkXAvqh52sVnNc1pYmoF2TEXsAvZnyPaZu8MW3S8EWHNfAh7X2xa63P7Y
+```
+```
+BTC: 1DkocMNiqFkbjhCmG4sg9zYQbi4YuguFWw
+```
+```
+ETH: 0xA660Fb28C06542258bd740973c17F2632dff2517
+```
+```
+BCH: qz975ndvcechzywtz59xpkt2hhdzkzt3vvt8762yk9
+```
+```
+XMR: 47gmN4GMQ17Veur5YEpru7eCQc5A65DaWUThZa9z9bP6jNMYXPKAyjDcAW4RzNYbRChEwnKu1H3qt9FPW9CnpwZgNscKawX
+```
+```
+ETN: etnkJXJFqiH9FCt6Gq2HWHPeY92YFsmvKX7qaysvnV11M796Xmovo2nSu6EUCMnniqRqAhKX9AQp31GbG3M2DiVM3qRDSQ5Vwq
+```
