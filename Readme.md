@@ -1,7 +1,6 @@
 ![image](https://cdn.qwertycoin.org/images/press/other/qwc-github-3.png)
 #### Master Build Status
 [![Build Status](https://travis-ci.org/qwertycoin-org/qwertycoin-mobile-wallet.svg?branch=master)](https://travis-ci.org/qwertycoin-org/qwertycoin-mobile-wallet)
-[![Build status](https://ci.appveyor.com/api/projects/status/udpsj8mf5x7s1rt6/branch/master?svg=true)](https://ci.appveyor.com/project/Qwertycoin/qwertycoin-mobile-wallet/branch/master)
 
 ExploShot's repository for the Android & Ios mobile wallet
 
