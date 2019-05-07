@@ -8,18 +8,89 @@
     <div class="body-content">
         <div class="panel nopadding">
             <div class="body">
+                <!-- GENERAL ELECTIONS -->
                 <div class="header-title">
-                    
+                    General Elections
                 </div>
                 <div class="content">
-                    <table>
-                        <template v-for="election in elections" v_if="elections.length !== 0">
-                            <tr>
-                               <td>{{ election.question }}</td>
+                    <div class="elections" id="nElections">
+                        <table>
+                            <template v-for="election in elections" v-if="elections.length !== 0">
+                                <template
+                                    v-if="election.active == true && election.category == electionCategories[0].categoryID">
+                                    <tr class="election">
+                                        <td class="electionLink">
+                                            <a class="btn full"
+                                                :href="'#electionDetails?questionID=' + election.questionID">{{election.question}}</a>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </table>
+                    </div>
+                </div>
 
-                            </tr>
-                        </template>
-                    </table>
+                <!-- EXCHANGE ELECTIONS -->
+                <div class="header-title">
+                    Exchange Elections
+                </div>
+                <div class="content">
+                    <div class="elections" id="nElections">
+                        <table>
+                            <template v-for="election in elections" v-if="elections.length !== 0">
+                                <template
+                                    v-if="election.active == true && election.category == electionCategories[1].categoryID">
+                                    <tr class="election">
+                                        <td class="electionLink">
+                                            <a class="btn full"
+                                                :href="'#electionDetails?questionID=' + election.questionID">{{election.question}}</a>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </table>
+                    </div>
+                </div>
+                <!-- DONATION PROJECTS -->
+                <div class="header-title">
+                    Donation Projects
+                </div>
+                <div class="content">
+                    <div class="elections" id="nElections">
+                        <table>
+                            <template v-for="election in elections" v-if="elections.length !== 0">
+                                <template
+                                    v-if="election.active == true && election.category == electionCategories[2].categoryID">
+                                    <tr class="election">
+                                        <td class="electionLink">
+                                            <a class="btn full"
+                                                :href="'#electionDetails?questionID=' + election.questionID">{{election.question}}</a>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </table>
+                    </div>
+                </div>
+                <!-- FINISHED ELECTIONS -->
+                <div class="header-title">
+                    Finished Elections
+                </div>
+                <div class="content">
+                    <div class="elections" id="nElections">
+                        <table>
+                            <template v-for="election in elections" v-if="elections.length !== 0">
+                                <template v-if="election.active == false">
+                                    <tr class="election">
+                                        <td class="electionLink">
+                                            <a class="btn full"
+                                                :href="'#electionDetails?questionID=' + election.questionID">{{election.question}}</a>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </template>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

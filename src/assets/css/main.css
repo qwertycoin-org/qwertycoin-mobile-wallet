@@ -135,7 +135,7 @@ body.native .hideOnNonNative {
 #topBar {
 	height: 36px;
 	line-height: 36px;
-  position: fixed;
+	position: fixed;
 	top: 0;
 	background: #252565;
 	color: rgba(255, 174, 0, 1);
@@ -148,7 +148,7 @@ body.native .hideOnNonNative {
 }
 
 #topBar a.toggleMenu {
-	color: rgba(255, 174, 0, 1) !important;
+	color: white !important;
 	display: inline-block;
 	height: 100%;
 	padding: 0 15px;
@@ -399,6 +399,47 @@ body.transparent #copyright {
 	text-align: right;
 	padding-right: 10px;
 	cursor: pointer;
+}
+
+.elections .election {
+	margin-bottom: 3vh;
+}
+
+.elections table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+#nElections {
+	padding: 10px 35px;
+}
+
+.elections table tr {
+	border-top: 0 none;
+	margin-bottom: 8vh;
+}
+
+.elections election td {
+	padding: 8px 0;
+}
+
+.elections .election .electiondescription {
+	width: 100%;
+	font-size: 5vw;
+	margin-left: 2vw;
+	margin-bottom: 25px;
+}
+
+.elections .election .electionLink {
+	width: 100%;
+	font-size: 5vw;
+	margin-left: 2vw;
+	margin-bottom: 25px;
+}
+
+.elections table .election .electionLink a {
+	padding-top: 1vh;
 }
 
 .transactions table {
@@ -1277,6 +1318,14 @@ body {
 	font-size: 1.71428571rem;
 }
 
+.btn.full {
+	width: 80%;
+	margin: 0 auto;
+	color: rgba(255, 174, 0, 1) !important;
+	background: #252565 !important;
+	border: 2px solid #252565 !important;
+}
+
 
 /*==================FORMS===================*/
 .field {
@@ -1517,7 +1566,8 @@ body {
 	display: block;
 	position: relative;
 	width: 0;
-	min-width: 2em;
+	min-width: 2.5em;
+	max-width: 100%;
 	background: rgba(255, 174, 0, 1);
 	border-radius: .28571429rem;
 	-webkit-transition: width .1s ease, background-color .1s ease;
@@ -1575,4 +1625,28 @@ body {
 .swal2-popup .swal2-styled.swal2-confirm {
 	background: #252565 !important;
 	color: rgba(255, 174, 0, 1) !important;
+}
+
+/*===================ACCORDION=================*/
+.accordion {
+	background-color: #eee;
+	color: #444;
+	cursor: pointer;
+	padding: 18px;
+	width: 100%;
+	text-align: left;
+	border: none;
+	outline: none;
+	transition: 0.4s;
+}
+
+.active .accordion:hover {
+	background-color: #ccc;
+}
+
+.acc-panel {
+	padding: 0 18px;
+	background-color: white;
+	display: none;
+	overflow: hidden;
 }

@@ -44,8 +44,9 @@ import {
     Constants
 } from "../model/Constants";
 import {
-    VueVar
+    VueClass, VueVar, VueWatched
 } from "../lib/numbersLab/VueAnnotate";
+import { Election } from './../../platforms/android/app/build/intermediates/assets/debug/www/model/Elections';
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer = DependencyInjectorInstance().getInstance(Constants.BLOCKCHAIN_EXPLORER);
@@ -82,24 +83,18 @@ class ElectionPageView extends DestructableView {
     }
 
     getElections() {
+        let self = this;
         let Url = config.electionApiUrl;
-        let request = require('request');
-        request(Url, function(error: any, resp: any, body: any) {
-            swal({
-                    type: 'success',
-                    title: `Statuscode ${resp.statusCode}`,
-                    confirmButtonText: 'Ok',
-            })
-        });    
-    }
+        
+        $.ajax({
+            url: Url
+        }).done(function(data: any) {
+            self.totalDonations = data.totalDonations;
+            self.elections = data.elections;
+            self.electionCategories = data.categories;
+        });
 
-    httpGet(){
-
-        let Url = config.electionApiUrl;
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", Url, false ); // false for synchronous request
-        xmlHttp.send( null );
-        return xmlHttp.responseText;
+         
     }
 
     vote() {

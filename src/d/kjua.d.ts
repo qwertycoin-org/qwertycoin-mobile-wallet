@@ -1,1 +1,1 @@
-declare var kjua : any;
+declare var kjua: any;

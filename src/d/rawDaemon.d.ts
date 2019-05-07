@@ -7,7 +7,7 @@ type Inputs = {
             mixin: number
         },
         output: {
-            number: number, 
+            number: number,
             transactionHash: string
         },
         type: string
@@ -15,7 +15,7 @@ type Inputs = {
 }
 
 type Outputs = {
-    globalIndex: number, 
+    globalIndex: number,
     output: {
         amount: 0,
         target: {
@@ -36,12 +36,12 @@ type RawDaemonTransaction = {
     extra: Extra,
     outputs: Outputs[],
     inputs: Inputs[],
-    fee : number,
+    fee: number,
     unlockTime: number,
-    global_index_start?: number,
-    height?: number,
-    timestamp?: number
-    hash?: string,
+    global_index_start ? : number,
+    height ? : number,
+    timestamp ? : number
+    hash ? : string,
     paymentId: string
 };
 

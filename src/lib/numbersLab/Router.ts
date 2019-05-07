@@ -8,9 +8,15 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {Logger} from "./Logger";
-import {DestructableView} from "./DestructableView";
-import {Context} from "./Context";
+import {
+	Logger
+} from "./Logger";
+import {
+	DestructableView
+} from "./DestructableView";
+import {
+	Context
+} from "./Context";
 
 export class Router {
 	currentPage: string | null = null;
@@ -20,7 +26,7 @@ export class Router {
 
 	urlPrefix = '!';
 
-	constructor(routerBaseHtmlRelativity  : string = './', routerBaseRelativity : string = '../') {
+	constructor(routerBaseHtmlRelativity: string = './', routerBaseRelativity: string = '../') {
 		let self = this;
 		this.routerBaseHtmlRelativity = routerBaseHtmlRelativity;
 		this.routerBaseJsRelativity = routerBaseRelativity;
@@ -34,14 +40,14 @@ export class Router {
 	static extractPageFromUrl() {
 		if (window.location.hash.indexOf('#!') != -1) {
 			return window.location.hash.substr(2);
-		}else if (window.location.hash.indexOf('#') != -1) {
+		} else if (window.location.hash.indexOf('#') != -1) {
 			return window.location.hash.substr(1);
 		} else {
 			return 'index';
 		}
 	}
 
-	changePageFromHash(){
+	changePageFromHash() {
 		this.changePage(Router.extractPageFromUrl());
 	}
 
@@ -65,7 +71,7 @@ export class Router {
 		}
 
 		let currentView = DestructableView.getCurrentAppView();
-		let promiseDestruct: Promise<void>;
+		let promiseDestruct: Promise < void > ;
 		if (currentView !== null) {
 			promiseDestruct = currentView.destruct();
 			currentView = null;
@@ -78,10 +84,10 @@ export class Router {
 		promiseDestruct.then(function () {
 			self.currentPage = completeNewPageName;
 
-			Logger.debug(self, 'Changing to page '+self.currentPage);
+			Logger.debug(self, 'Changing to page ' + self.currentPage);
 
-			let promiseContent = self.loadContent(self.routerBaseHtmlRelativity+'pages/' + newPageName + '.html');
-			let jsContentPath = self.routerBaseJsRelativity+'pages/' + newPageName + '.js';
+			let promiseContent = self.loadContent(self.routerBaseHtmlRelativity + 'pages/' + newPageName + '.html');
+			let jsContentPath = self.routerBaseJsRelativity + 'pages/' + newPageName + '.js';
 
 			Promise.all([promiseContent]).then(function (data: string[]) {
 				let content = data[0];
@@ -120,8 +126,8 @@ export class Router {
 	 * @param {string} url
 	 * @returns {Promise<string>}
 	 */
-	loadContent(url: string): Promise<string> {
-		return new Promise<string>(function (resolve, reject) {
+	loadContent(url: string): Promise < string > {
+		return new Promise < string > (function (resolve, reject) {
 			$.ajax({
 				url: url,
 				dataType: 'text',

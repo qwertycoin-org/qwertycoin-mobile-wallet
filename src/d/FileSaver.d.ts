@@ -1,1 +1,1 @@
-declare function saveAs(block : any, filename:string) : void;
+declare function saveAs(block: any, filename: string): void;

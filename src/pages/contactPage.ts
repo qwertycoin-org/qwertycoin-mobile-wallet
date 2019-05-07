@@ -73,7 +73,6 @@ class ContactPageView extends DestructableView {
         this.getContacts();
     }
 
-
     hasOneStored(): Promise < boolean > {
         return Storage.getItem('qwcContacts').then((contacts: any) => {
             return JSON.parse(contacts).length !== 0;

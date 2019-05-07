@@ -8,94 +8,95 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {Context} from "./Context";
+import {
+    Context
+} from "./Context";
 
-export class Logger{
-    public static  EMERGENCY = 700;
-    public static  ALERT     = 600;
-    public static  CRITICAL  = 500;
-    public static  ERROR     = 400;
-    public static  WARNING   = 300;
-    public static  NOTICE    = 200;
-    public static  INFO      = 100;
-    public static  DEBUG     = 0;
+export class Logger {
+    public static EMERGENCY = 700;
+    public static ALERT = 600;
+    public static CRITICAL = 500;
+    public static ERROR = 400;
+    public static WARNING = 300;
+    public static NOTICE = 200;
+    public static INFO = 100;
+    public static DEBUG = 0;
 
-    public static LEVEL_NAMES:any = {
-        '700':'EMERGENCY',
-        '600':'ALERT',
-        '500':'CRITICAL',
-        '400':'ERROR',
-        '300':'WARNING',
-        '200':'NOTICE',
-        '100':'INFO',
-        '0':'DEBUG',
+    public static LEVEL_NAMES: any = {
+        '700': 'EMERGENCY',
+        '600': 'ALERT',
+        '500': 'CRITICAL',
+        '400': 'ERROR',
+        '300': 'WARNING',
+        '200': 'NOTICE',
+        '100': 'INFO',
+        '0': 'DEBUG',
     };
 
-    static set level(level : number){
+    static set level(level: number) {
         // console.log('Setting logger level to '+level);
         Context.getGlobalContextStorage().logLevel = level;
     }
-    static get level() : number{
+    static get level(): number {
         let level = Context.getGlobalContextStorage().logLevel;
         return level;
     }
 
-    public static log(level : number, caller: string, message : string, context : any = {}){
-        if(Logger.level <= level){
+    public static log(level: number, caller: string, message: string, context: any = {}) {
+        if (Logger.level <= level) {
             let levelName = Logger.LEVEL_NAMES[level] === null ? '????' : Logger.LEVEL_NAMES[level];
-            if(level >= Logger.ERROR) {
+            if (level >= Logger.ERROR) {
                 console.error(levelName + '[' + Logger.getCallerName(caller) + ']' + Logger.interpolate(message, context));
-            }
-            else if(level >= Logger.WARNING)
-                console.warn(levelName+'['+Logger.getCallerName(caller)+']'+Logger.interpolate(message, context));
-            else{
-				console.log(levelName+'['+Logger.getCallerName(caller)+']'+Logger.interpolate(message, context));
+            } else if (level >= Logger.WARNING)
+                console.warn(levelName + '[' + Logger.getCallerName(caller) + ']' + Logger.interpolate(message, context));
+            else {
+                console.log(levelName + '[' + Logger.getCallerName(caller) + ']' + Logger.interpolate(message, context));
             }
 
         }
     }
 
-    public static debug(caller: any, message : string, context : any = {}){
+    public static debug(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.DEBUG, caller, message, context);
     }
-    public static info(caller: any, message : string, context : any = {}){
+    public static info(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.INFO, caller, message, context);
     }
-    public static notice(caller: any, message : string, context : any = {}){
+    public static notice(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.NOTICE, caller, message, context);
     }
-    public static warning(caller: any, message : string, context : any = {}){
+    public static warning(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.WARNING, caller, message, context);
     }
-    public static error(caller: any, message : string, context : any = {}){
+    public static error(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.ERROR, caller, message, context);
     }
-    public static critical(caller: any, message : string, context : any = {}){
+    public static critical(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.CRITICAL, caller, message, context);
     }
-    public static alert(caller: any, message : string, context : any = {}){
+    public static alert(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.ALERT, caller, message, context);
     }
-    public static emergency(caller: any, message : string, context : any = {}){
+    public static emergency(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.EMERGENCY, caller, message, context);
     }
 
-    private static interpolate(message:string, context : any = {}){
-        for(let key in context) {
-            message = message.replace('{' +key+ '}', context[key]);
+    private static interpolate(message: string, context: any = {}) {
+        for (let key in context) {
+            message = message.replace('{' + key + '}', context[key]);
         }
         return message;
     }
 
-    private static getCallerName(object : any){
+    private static getCallerName(object: any) {
         let type = typeof object;
-        if(type === 'string'){
+        if (type === 'string') {
             return object;
-        }else if(type === 'object'){
+        } else if (type === 'object') {
             let funcNameRegex = /function (.{1,})\(/;
             let results = (funcNameRegex).exec((object).constructor.toString());
             let name = (results && results.length > 1) ? results[1] : '';
-            if(name !== '')
+            if (name !== '')
                 return name;
             funcNameRegex = /class [a-zA-Z0-9]+/;
             results = (funcNameRegex).exec((object).constructor.toString());

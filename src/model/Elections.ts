@@ -1,6 +1,4 @@
 /**
- *	   Copyright (c) 2018, Gnock
- *	   Copyright (c) 2018, The Masari Project
  *     Copyright (c) 2019, ExploShot
  *     Copyright (c) 2019, The Qwertycoin Project
  * 
@@ -30,16 +28,21 @@
  *     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare interface NativeQrScanner {
-	prepare(): void;
-	scan(callback: (err: {
-		name: string
-	} | undefined | null, result: string) => void): void;
-	cancelScan(callback: (status: any) => void): void;
-	show(): void;
-	hide(): void;
-}
+ export interface Answer {
+    answer: string,
+    address: string,
+    balance: string,
+    votes: string
+ };
 
-interface Window {
-	QRScanner ? : NativeQrScanner
-}
+ export interface Election {
+    questionID: string,
+    category: string,
+    question: string,
+    description: string,
+    QWCPerVote: string,
+    minimumVotes: string,
+    neededBTC: string,
+    answers: Answer[],
+    active: boolean
+ };

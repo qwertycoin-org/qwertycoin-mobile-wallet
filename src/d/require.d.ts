@@ -6,30 +6,34 @@
 interface RequireShim {
 
     // List of dependencies.
-    deps?: string[];
+    deps ? : string[];
 
     // Name the module will be exported as.
-    exports?: string;
+    exports ? : string;
 
     // Initialize function with all dependcies passed in,
     // if the function returns a value then that value is used
     // as the module export value instead of the object
     // found via the 'exports' string.
-    init?: (...dependencies: any[]) => any;
+    init ? : (...dependencies: any[]) => any;
 }
 
 interface RequireConfig {
 
     // The root path to use for all module lookups.
-    baseUrl?: string;
+    baseUrl ? : string;
 
     // Path mappings for module names not found directly under
     // baseUrl.
-    paths?: { [key: string]: string; };
+    paths ? : {
+        [key: string]: string;
+    };
 
     // Dictionary of Shim's.
     // does not cover case of key->string[]
-    shim?: { [key: string]: RequireShim;  };
+    shim ? : {
+        [key: string]: RequireShim;
+    };
 
     /**
      * For the given module prefix, instead of loading the
@@ -38,17 +42,17 @@ interface RequireConfig {
      *
      * @example
      * requirejs.config({
-	*	map: {
-	*		'some/newmodule': {
-	*			'foo': 'foo1.2'
-	*		},
-	*		'some/oldmodule': {
-	*			'foo': 'foo1.0'
-	*		}
-	*	}
-	* });
+     *	map: {
+     *		'some/newmodule': {
+     *			'foo': 'foo1.2'
+     *		},
+     *		'some/oldmodule': {
+     *			'foo': 'foo1.0'
+     *		}
+     *	}
+     * });
      **/
-    map?: {
+    map ? : {
         [id: string]: {
             [id: string]: string;
         };
@@ -56,35 +60,37 @@ interface RequireConfig {
 
     // AMD configurations, use module.config() to access in
     // define() functions
-    config?: { [id: string]: { }; };
+    config ? : {
+        [id: string]: {};
+    };
 
     // Configures loading modules from CommonJS packages.
-    packages?: { };
+    packages ? : {};
 
     // The number of seconds to wait before giving up on loading
     // a script.  The default is 7 seconds.
-    waitSeconds?: number;
+    waitSeconds ? : number;
 
     // A name to give to a loading context.  This allows require.js
     // to load multiple versions of modules in a page, as long as
     // each top-level require call specifies a unique context string.
-    context?: string;
+    context ? : string;
 
     // An array of dependencies to load.
-    deps?: string[];
+    deps ? : string[];
 
     // A function to pass to require that should be require after
     // deps have been loaded.
-    callback?: (...modules: any[]) => void;
+    callback ? : (...modules: any[]) => void;
 
     // If set to true, an error will be thrown if a script loads
     // that does not call define() or have shim exports string
     // value that can be checked.
-    enforceDefine?: boolean;
+    enforceDefine ? : boolean;
 
     // If set to true, document.createElementNS() will be used
     // to create script elements.
-    xhtml?: boolean;
+    xhtml ? : boolean;
 
     /**
      * Extra query string arguments appended to URLs that RequireJS
@@ -94,7 +100,7 @@ interface RequireConfig {
      * @example
      * urlArgs: "bust= + (new Date()).getTime()
      **/
-    urlArgs?: string;
+    urlArgs ? : string;
 
     /**
      * Specify the value for the type="" attribute used for script
@@ -102,7 +108,7 @@ interface RequireConfig {
      * "text/javascript".  To use Firefox's JavasScript 1.8
      * features, use "text/javascript;version=1.8".
      **/
-    scriptType?: string;
+    scriptType ? : string;
 
 }
 
@@ -110,7 +116,7 @@ interface RequireConfig {
 interface RequireModule {
 
 
-    config(): { };
+    config(): {};
 
 }
 
@@ -132,7 +138,7 @@ interface Require {
     // Callback is optional.
     // Can alternatively use deps and callback.
     (module: string): any;
-    (modules: string[], ready?: (...modules: any[]) => void, errorCallback?: (err : RequireError) => void): void;
+    (modules: string[], ready ? : (...modules: any[]) => void, errorCallback ? : (err: RequireError) => void): void;
 
     // Generate URLs from require module
     toUrl(module: string): string;
@@ -147,13 +153,12 @@ interface Require {
     onResourceLoad(context: Object, map: RequireMap, depArray: RequireMap[]): void;
 }
 
-interface RequireError
-{
+interface RequireError {
     requireType: string;
     requireModules: string[];
-    originalError?: string;
-    contextName? : string;
-    requireMap?: any;
+    originalError ? : string;
+    contextName ? : string;
+    requireMap ? : any;
 }
 
 interface RequireDefine {
@@ -162,7 +167,9 @@ interface RequireDefine {
      * Define Simple Name/Value Pairs
      * @config Dictionary of Named/Value pairs for the config.
      **/
-    (config: { [key: string]: any; }): void;
+    (config: {
+        [key: string]: any;
+    }): void;
 
     /**
      * Define function.
@@ -187,7 +194,9 @@ interface RequireDefine {
      *	@module module
      *	@return module definition
      **/
-    (ready: (require: Require, exports: { [key: string]: any; }, module: RequireModule) => any): void;
+    (ready: (require: Require, exports: {
+        [key: string]: any;
+    }, module: RequireModule) => any): void;
 
     /**
      * Define a module with a name and dependencies.

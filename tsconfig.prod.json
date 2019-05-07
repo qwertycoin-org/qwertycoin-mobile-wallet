@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "AMD",
+        "target": "es5",
+        "lib": ["ES5", "DOM", "es2015"],
+        "sourceMap": false,
+        "moduleResolution": "node",
+        "strict": true,
+        "experimentalDecorators": true,
+        "types": [],
+
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "platforms",
+        "www"
+    ]
+}

@@ -1,1 +1,1 @@
-declare var nacl : any;
+declare var nacl: any;

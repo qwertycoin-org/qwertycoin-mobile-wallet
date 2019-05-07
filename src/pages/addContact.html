@@ -1,29 +1,29 @@
 <div id="app" class="body-root">
-        <div class="body-header">
-          <div class="header-title">
-            <i class="fa fa-plus-square" aria-hidden="true"></i> {{ $t("contactPage.contactBlock.newContact")}}
+  <div class="body-header">
+    <div class="header-title">
+      <i class="fa fa-plus-square" aria-hidden="true"></i> {{ $t("contactPage.contactBlock.newContact")}}
+    </div>
+  </div>
+  <div class="body-content">
+    <div class="panel">
+      <div class="body">
+        <div class="content">
+          <div class="field">
+            <label>{{ $t("contactPage.contactBlock.contactName")}}</label>
+            <input type="text" v-model="contactName" autocomplete="off">
           </div>
-        </div>
-        <div class="body-content">
-          <div class="panel">
-            <div class="body">
-              <div class="content">
-                <div class="field">
-                  <label></label>
-                  <input type="text" v-model="contactName" autocomplete="off">
-                </div>
-      
-                <div class="field">
-                    <label></label>
-                    <input type="text" v-model="contactAddress" autocomplete="off">
-                </div>
 
-                <div class="actions tc">
-                    <button class="btn mini" @click="addContact()" :disabled="!(contactName !== '' && contactAddress !== '')">{{ $t("contactPage.contactBlock.confirm")}}</button>
-                </div>
-              </div>
-            </div>
+          <div class="field">
+            <label>{{ $t("contactPage.contactBlock.contactAddress")}}</label>
+            <input type="text" v-model="contactAddress" autocomplete="off">
+          </div>
+
+          <div class="actions tc">
+            <button class="btn mini" @click="addContact()"
+              :disabled="!(contactName !== '' && contactAddress !== '')">{{ $t("contactPage.contactBlock.confirm")}}</button>
           </div>
         </div>
       </div>
-      
+    </div>
+  </div>
+</div>

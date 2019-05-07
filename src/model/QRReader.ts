@@ -18,30 +18,30 @@ export
 
 
 
-class QRReader{
+class QRReader {
 	active = false;
-	webcam : HTMLVideoElement|null = null;
-	canvas : HTMLCanvasElement|null = null;
-	ctx : CanvasRenderingContext2D|null = null;
-	decoder : Worker|null = null;
+	webcam: HTMLVideoElement | null = null;
+	canvas: HTMLCanvasElement | null = null;
+	ctx: CanvasRenderingContext2D | null = null;
+	decoder: Worker | null = null;
 	inited = false;
 
-	setCanvas(){
+	setCanvas() {
 		this.canvas = document.createElement("canvas");
 		this.ctx = this.canvas.getContext("2d");
 	}
 
-	support(){
+	support() {
 		return typeof navigator !== 'undefined' && typeof navigator.mediaDevices !== 'undefined';
 	}
 
-	init(baseUrl : string){
-		if(!this.inited)
-			this.inited=true;
+	init(baseUrl: string) {
+		if (!this.inited)
+			this.inited = true;
 		else
 			return;
 
-		if(!this.support())
+		if (!this.support())
 			return false;
 
 
@@ -53,7 +53,7 @@ class QRReader{
 		this.setCanvas();
 		this.decoder = new Worker(baseUrl + "decoder.min.js");
 
-		if(this.canvas === null || this.webcam === null)
+		if (this.canvas === null || this.webcam === null)
 			return;
 
 		/*if (!window.iOS) {
@@ -73,13 +73,13 @@ class QRReader{
 		// }
 
 
-		function startCapture(constraints : MediaStreamConstraints) {
+		function startCapture(constraints: MediaStreamConstraints) {
 			navigator.mediaDevices.getUserMedia(constraints)
 				.then(function (stream) {
-					if(self.webcam !== null)
+					if (self.webcam !== null)
 						self.webcam.srcObject = stream;
 				})
-				.catch(function(err) {
+				.catch(function (err) {
 					showErrorMsg(err);
 				});
 		}
@@ -90,7 +90,7 @@ class QRReader{
 				console.log(devices);
 				let supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
 				console.log(supportedConstraints);
-				let device = devices.filter(function(device) {
+				let device = devices.filter(function (device) {
 					let deviceLabel = device.label.split(',')[1];
 					if (device.kind == "videoinput") {
 						return device;
@@ -108,9 +108,8 @@ class QRReader{
 						audio: false
 					};
 
-					startCapture(<MediaStreamConstraints>constraints);
-				}
-				else if (device.length) {
+					startCapture( < MediaStreamConstraints > constraints);
+				} else if (device.length) {
 					let constraints = {
 						facingMode: 'environment',
 						video: {
@@ -121,10 +120,11 @@ class QRReader{
 						audio: false
 					};
 
-					startCapture(<MediaStreamConstraints>constraints);
-				}
-				else {
-					startCapture({video:true});
+					startCapture( < MediaStreamConstraints > constraints);
+				} else {
+					startCapture({
+						video: true
+					});
 				}
 			})
 			.catch(function (error) {
@@ -132,13 +132,13 @@ class QRReader{
 			});
 		// }
 
-		function showErrorMsg(error : string) {
-			if(''+error === 'DOMException: Permission denied'){
+		function showErrorMsg(error: string) {
+			if ('' + error === 'DOMException: Permission denied') {
 				swal({
 					type: 'error',
-					title:i18n.t('global.permissionRequiredForCameraModal.title'),
-					html:i18n.t('global.permissionRequiredForCameraModal.content'),
-					confirmButtonText:i18n.t('global.permissionRequiredForCameraModal.confirmText'),
+					title: i18n.t('global.permissionRequiredForCameraModal.title'),
+					html: i18n.t('global.permissionRequiredForCameraModal.content'),
+					confirmButtonText: i18n.t('global.permissionRequiredForCameraModal.confirmText'),
 				});
 			}
 			console.log('unable access camera');
@@ -148,23 +148,23 @@ class QRReader{
 	stop() {
 		this.active = false;
 		if (this.webcam !== null) {
-			if(this.webcam.srcObject!==null && this.webcam.srcObject instanceof MediaStream)
+			if (this.webcam.srcObject !== null && this.webcam.srcObject instanceof MediaStream)
 				this.webcam.srcObject.getVideoTracks()[0].stop();
 			this.webcam.srcObject = null;
 		}
 	}
 
-	scan(callback : Function) {
-		if(this.decoder === null)
+	scan(callback: Function) {
+		if (this.decoder === null)
 			return;
 		let self = this;
 
 		// Start QR-decoder
 		function newDecoderFrame() {
-			if(self.ctx === null || self.webcam === null || self.canvas === null || self.decoder === null)
+			if (self.ctx === null || self.webcam === null || self.canvas === null || self.decoder === null)
 				return;
 
-//			console.log('new frame');
+			//			console.log('new frame');
 			if (!self.active) return;
 			try {
 				self.ctx.drawImage(self.webcam, 0, 0, self.canvas.width, self.canvas.height);
@@ -173,7 +173,7 @@ class QRReader{
 				if (imgData.data) {
 					self.decoder.postMessage(imgData);
 				}
-			} catch(e) {
+			} catch (e) {
 				// Try-Catch to circumvent Firefox Bug #879717
 				if (e.name == "NS_ERROR_NOT_AVAILABLE") setTimeout(newDecoderFrame, 0);
 			}
@@ -181,7 +181,7 @@ class QRReader{
 
 		this.active = true;
 		this.setCanvas();
-		this.decoder.onmessage = function(event) {
+		this.decoder.onmessage = function (event) {
 			if (event.data.length > 0) {
 				let qrid = event.data[0][2];
 				self.active = false;

@@ -13,29 +13,22 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-declare enum NativeNativeStorageErrorCode {
-	NATIVE_WRITE_FAILED = 1,
-		ITEM_NOT_FOUND = 2,
-		NULL_REFERENCE = 3,
-		UNDEFINED_TYPE = 4,
-		JSON_ERROR = 5,
-		WRONG_PARAMETER = 6
-}
+const workboxBuild = require('workbox-build');
 
-type NativeNativeStorageError = {
-	code: number,
-	exception ? : any,
-	source ? : "Native" | "JS"
-}
+// NOTE: This should be run *AFTER* all your assets are built
+const buildSW = () => {
+	// This will return a Promise
+	return workboxBuild.injectManifest({
+		swSrc: 'src/service-worker-raw.js',
+		swDest: 'src/service-worker.js',
+		globDirectory: 'src',
+		globPatterns: [
+			'**\/*.{js,css,html,json,png,ico,jpg}',
+		],
+		globIgnores: [
+			'd/Vue.js', 'src/service-worker-raw.js'
+		]
+	});
+};
 
-declare interface NativeNativeStorage {
-	setItem(key: string, value: any, callbackSuccess: () => void, callbackError: (error: NativeNativeStorageError) => void): void;
-	getItem(key: string, callbackSuccess: () => void, callbackError: (error: NativeNativeStorageError) => void): void;
-	keys(callbackSuccess: (keys: string[]) => void, callbackError: (error: NativeNativeStorageError) => void): void;
-	remove(key: string, callbackSuccess: () => void, callbackError: (error: NativeNativeStorageError) => void): void;
-	clear(callbackSuccess: () => void, callbackError: (error: NativeNativeStorageError) => void): void;
-}
-
-interface Window {
-	NativeStorage ? : NativeNativeStorage
-}
+buildSW();

@@ -1,19 +1,23 @@
 language: android
 
-node_js:
-  - 5.5
-
 notifications:
   email: false
 
 sudo: false
+
+os:
+  - linux
+  - osx
+node_js:
+  - '6'
+  - '8'
+  - '10'
 
 branches:
   only:
   - master
 
 install:
-  - npm cache clean
   - npm install
   - npm install -g cordova
   - echo y | android update sdk -u --filter android-22,android-23

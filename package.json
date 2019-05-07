@@ -1,7 +1,7 @@
 {
     "name": "qwertycoinmobileapp",
     "displayName": "Qwertycoin Mobile App",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "description": "Qwertycoin wallet for mobile devices",
     "scripts": {},
     "author": "ExploShot - Qwertycoin Team",
@@ -9,13 +9,18 @@
     "dependencies": {
         "cordova-android": "^7.1.4",
         "cordova-plugin-app-version": "^0.1.9",
+        "cordova-plugin-background-mode": "git+https://github.com/8bhsolutions/cordova-plugin-background-mode.git",
+        "cordova-plugin-badge": "^0.8.8",
+        "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-file": "^6.0.1",
+        "cordova-plugin-local-notification": "git+https://github.com/Steffaan/cordova-plugin-local-notifications.git",
         "cordova-plugin-nativestorage": "^2.3.2",
         "cordova-plugin-qrscanner": "^3.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
         "cordova-plugin-statusbar": "^2.4.2",
         "cordova-plugin-whitelist": "^1.3.3",
-        "phonegap-nfc": "^1.0.3"
+        "phonegap-nfc": "^1.0.3",
+        "workbox-build": "^3.6.3"
     },
     "cordova": {
         "plugins": {
@@ -26,7 +31,10 @@
             "cordova-plugin-statusbar": {},
             "cordova-plugin-splashscreen": {},
             "cordova-plugin-file": {},
-            "cordova-plugin-app-version": {}
+            "cordova-plugin-app-version": {},
+            "cordova-plugin-local-notification": {
+                "ANDROID_SUPPORT_V4_VERSION": "26.+"
+            }
         },
         "platforms": [
             "android"

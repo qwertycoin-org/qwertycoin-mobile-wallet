@@ -2,9 +2,10 @@ let global: any = typeof window !== 'undefined' ? window : self;
 global.config = {
 	apiUrl: [
 		"https://01.cache.myqwertycoin.com/",
-		"https://02.cache.myqwertycoin.com/"
+		"https://02.cache.myqwertycoin.com/",
+		"https://03.cache.myqwertycoin.com/"
 	],
-	electionApiUrl: "https://voting.qwertycoin.org/?api",
+	electionApiUrl: "https://voting.qwertycoin.org/api",
 	websiteApiUrl: "https://www.qwertycoin.org/wp-json",
 	mainnetExplorerUrl: "https://explorer.qwertycoin.org/",
 	mainnetExplorerUrlHash: "https://explorer.qwertycoin.org/?hash={ID}#blockchain_transaction",

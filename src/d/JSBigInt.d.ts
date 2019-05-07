@@ -1,1 +1,1 @@
-declare var JSBigInt : any;
+declare var JSBigInt: any;

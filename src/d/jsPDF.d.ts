@@ -1,1 +1,1 @@
-declare var jsPDF : any;
+declare var jsPDF: any;

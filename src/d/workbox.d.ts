@@ -1,1 +1,1 @@
-declare var workbox : any;
+declare var workbox: any;

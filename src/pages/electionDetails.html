@@ -1,0 +1,68 @@
+<div id="app" class="body-root" v-cloak="">
+    <div class="body-header">
+        <div class="header-title">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{ $t("electionsPage.title")}}
+        </div>
+    </div>
+
+    <div class="body-content">
+        <div class="panel nopadding">
+            <div class="body">
+                <div class="header-title">
+                    {{ question }}
+                </div>
+                <div class="content">
+                    <div class="elections" id="nElections">
+
+                        <div class="election">
+                            <div class="electiondescription">
+                                {{ description }}
+                            </div>
+                        </div>
+
+                        <div class="election">
+                            <div class="electionLink">
+                                Needed Amount: <strong>{{ $n(neededBTC) }} BTC</strong>
+                            </div>
+                        </div>
+                        <div class="election">
+                            <div class="electionLink">
+                                One valid Vote equals: <strong>{{ $n(qwcPerVote) }} QWC</strong>
+                            </div>
+                        </div>
+                        <div class="election">
+                            <div class="electionLink">
+                                Initial minimum Votes: <strong>{{ $n(minimumVotes) }}</strong>
+                            </div>
+                        </div>
+                        <table>
+                            <template v-for="answer in answers">
+                                <tr class="election">
+                                    <td class="electionLink">
+                                        <a @click="send(answer.address)" class="btn full">{{answer.answer}}</a>
+                                    </td>
+                                </tr>
+                                <tr class="elections">
+                                    <td class="electionLink">
+                                        <div class="progress">
+                                            <div class="bar"
+                                                :style="'width:'+(parseInt(answer.votes)/parseInt(minimumVotes)*100 | 0) + '%'">
+                                                {{ Math.floor(parseInt(answer.votes) / parseInt(minimumVotes) * 100)}}%
+                                            </div>
+                                            <label>
+                                                <span class="currentScanBlock">{{$n(answer.votes)}}</span>
+                                                /
+                                                <span class="blockchainHeight">{{$n(minimumVotes)}}</span>
+                                                Votes
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

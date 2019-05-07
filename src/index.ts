@@ -206,7 +206,7 @@ if(isCordovaApp){
 			promiseLoadingReadyResolve();
 		clearInterval(timeoutCordovaLoad);
 	}, false);
-
+	
 }else
 	promiseLoadingReady = Promise.resolve();
 

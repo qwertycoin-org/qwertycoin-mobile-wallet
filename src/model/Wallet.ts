@@ -57,6 +57,7 @@ export type RawWallet = {
 	options?:RawWalletOptions,
 	coinAddressPrefix?:any,
 }
+
 export type RawFullyEncryptedWallet = {
 	data:number[],
 	nonce:string
@@ -251,9 +252,10 @@ export class Wallet extends Observable{
 	}
 
 	getTransactionsCopy() : Transaction[]{
-		let news = [];
+		let news: any[] = [];
 		for(let transaction of this.transactions){
 			news.push(Transaction.fromRaw(transaction.export()));
+			
 		}
 		return news;
 	}

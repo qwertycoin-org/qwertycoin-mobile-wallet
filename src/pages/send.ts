@@ -13,21 +13,56 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {DestructableView} from "../lib/numbersLab/DestructableView";
-import {VueRequireFilter, VueVar, VueWatched} from "../lib/numbersLab/VueAnnotate";
-import {TransactionsExplorer} from "../model/TransactionsExplorer";
-import {WalletRepository} from "../model/WalletRepository";
-import {BlockchainExplorerRpc2, WalletWatchdog} from "../model/blockchain/BlockchainExplorerRpc2";
-import {Autowire, DependencyInjectorInstance} from "../lib/numbersLab/DependencyInjector";
-import {Constants} from "../model/Constants";
-import {Wallet} from "../model/Wallet";
-import {BlockchainExplorer} from "../model/blockchain/BlockchainExplorer";
-import {Url} from "../utils/Url";
-import {CoinUri} from "../model/CoinUri";
-import {QRReader} from "../model/QRReader";
-import {AppState} from "../model/AppState";
-import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
-import {NdefMessage, Nfc} from "../model/Nfc";
+import {
+	DestructableView
+} from "../lib/numbersLab/DestructableView";
+import {
+	VueRequireFilter,
+	VueVar,
+	VueWatched
+} from "../lib/numbersLab/VueAnnotate";
+import {
+	TransactionsExplorer
+} from "../model/TransactionsExplorer";
+import {
+	WalletRepository
+} from "../model/WalletRepository";
+import {
+	BlockchainExplorerRpc2,
+	WalletWatchdog
+} from "../model/blockchain/BlockchainExplorerRpc2";
+import {
+	Autowire,
+	DependencyInjectorInstance
+} from "../lib/numbersLab/DependencyInjector";
+import {
+	Constants
+} from "../model/Constants";
+import {
+	Wallet
+} from "../model/Wallet";
+import {
+	BlockchainExplorer
+} from "../model/blockchain/BlockchainExplorer";
+import {
+	Url
+} from "../utils/Url";
+import {
+	CoinUri
+} from "../model/CoinUri";
+import {
+	QRReader
+} from "../model/QRReader";
+import {
+	AppState
+} from "../model/AppState";
+import {
+	BlockchainExplorerProvider
+} from "../providers/BlockchainExplorerProvider";
+import {
+	NdefMessage,
+	Nfc
+} from "../model/Nfc";
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
@@ -35,29 +70,29 @@ let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getI
 AppState.enableLeftMenu();
 
 class SendView extends DestructableView {
-	@VueVar('') destinationAddressUser !: string;
-	@VueVar('') destinationAddress !: string;
-	@VueVar(false) destinationAddressValid !: boolean;
-	@VueVar('') amountToSend !: string;
-	@VueVar(false) lockedForm !: boolean;
-	@VueVar(true) amountToSendValid !: boolean;
-	@VueVar('') paymentId !: string;
-	@VueVar(true) paymentIdValid !: boolean;
+	@VueVar('') destinationAddressUser!: string;
+	@VueVar('') destinationAddress!: string;
+	@VueVar(false) destinationAddressValid!: boolean;
+	@VueVar('') amountToSend!: string;
+	@VueVar(false) lockedForm!: boolean;
+	@VueVar(true) amountToSendValid!: boolean;
+	@VueVar('') paymentId!: string;
+	@VueVar(true) paymentIdValid!: boolean;
 
-	@VueVar(null) domainAliasAddress !: string | null;
-	@VueVar(null) txDestinationName !: string | null;
-	@VueVar(null) txDescription !: string | null;
-	@VueVar(true) openAliasValid !: boolean;
+	@VueVar(null) domainAliasAddress!: string | null;
+	@VueVar(null) txDestinationName!: string | null;
+	@VueVar(null) txDescription!: string | null;
+	@VueVar(true) openAliasValid!: boolean;
 
-	@VueVar(false) qrScanning !: boolean;
-	@VueVar(false) nfcAvailable !: boolean;
+	@VueVar(false) qrScanning!: boolean;
+	@VueVar(false) nfcAvailable!: boolean;
 
-	@Autowire(Nfc.name) nfc !: Nfc;
+	@Autowire(Nfc.name) nfc!: Nfc;
 
 	qrReader: QRReader | null = null;
 	redirectUrlAfterSend: string | null = null;
 
-	ndefListener : ((data: NdefMessage)=>void)|null = null;
+	ndefListener: ((data: NdefMessage) => void) | null = null;
 
 	constructor(container: string) {
 		super(container);
@@ -91,9 +126,9 @@ class SendView extends DestructableView {
 		this.stopScan();
 	}
 
-	startNfcScan(){
+	startNfcScan() {
 		let self = this;
-		if(this.ndefListener === null) {
+		if (this.ndefListener === null) {
 			this.ndefListener = function (data: NdefMessage) {
 				if (data.text)
 					self.handleScanResult(data.text.content);
@@ -101,7 +136,7 @@ class SendView extends DestructableView {
 			};
 			this.nfc.listenNdef(this.ndefListener);
 			swal({
-				title:  i18n.t('sendPage.waitingNfcModal.title'),
+				title: i18n.t('sendPage.waitingNfcModal.title'),
 				html: i18n.t('sendPage.waitingNfcModal.content'),
 				onOpen: () => {
 					swal.showLoading();
@@ -109,13 +144,12 @@ class SendView extends DestructableView {
 				onClose: () => {
 					this.stopNfcScan();
 				}
-			}).then((result : any) => {
-			});
+			}).then((result: any) => {});
 		}
 	}
 
-	stopNfcScan(){
-		if(this.ndefListener !== null)
+	stopNfcScan() {
+		if (this.ndefListener !== null)
 			this.nfc.removeNdef(this.ndefListener);
 		this.ndefListener = null;
 	}
@@ -128,12 +162,13 @@ class SendView extends DestructableView {
 
 	startScan() {
 		let self = this;
-		if(typeof window.QRScanner !== 'undefined') {
-			window.QRScanner.scan(function (err : any, result : any){
+		if (typeof window.QRScanner !== 'undefined') {
+			window.QRScanner.prepare();
+			window.QRScanner.scan(function (err: any, result: any) {
 				if (err) {
-					if(err.name === 'SCAN_CANCELED'){
+					if (err.name === 'SCAN_CANCELED') {
 
-					}else{
+					} else {
 						alert(JSON.stringify(err));
 					}
 				} else {
@@ -145,7 +180,7 @@ class SendView extends DestructableView {
 			$('body').addClass('transparent');
 			$('#appContent').hide();
 			$('#nativeCameraPreview').show();
-		}else {
+		} else {
 			this.initQr();
 			if (this.qrReader) {
 				this.qrScanning = true;
@@ -157,7 +192,7 @@ class SendView extends DestructableView {
 		}
 	}
 
-	handleScanResult(result : string){
+	handleScanResult(result: string) {
 		console.log('Scan result:', result);
 		let self = this;
 		let parsed = false;
@@ -171,11 +206,10 @@ class SendView extends DestructableView {
 					self.amountToSend = txDetails.amount;
 					self.lockedForm = true;
 				}
-				if(typeof txDetails.paymentId !== 'undefined')self.paymentId = txDetails.paymentId;
+				if (typeof txDetails.paymentId !== 'undefined') self.paymentId = txDetails.paymentId;
 				parsed = true;
 			}
-		} catch (e) {
-		}
+		} catch (e) {}
 
 		try {
 			let txDetails = CoinUri.decodeWallet(result);
@@ -183,8 +217,7 @@ class SendView extends DestructableView {
 				self.destinationAddressUser = txDetails.address;
 				parsed = true;
 			}
-		} catch (e) {
-		}
+		} catch (e) {}
 
 		if (!parsed)
 			self.destinationAddressUser = result;
@@ -192,15 +225,15 @@ class SendView extends DestructableView {
 	}
 
 	stopScan() {
-		if(typeof window.QRScanner !== 'undefined') {
-			window.QRScanner.cancelScan(function (status:any){
+		if (typeof window.QRScanner !== 'undefined') {
+			window.QRScanner.cancelScan(function (status: any) {
 				console.log(status);
 			});
 			window.QRScanner.hide();
 			$('body').removeClass('transparent');
 			$('#appContent').show();
 			$('#nativeCameraPreview').hide();
-		}else {
+		} else {
 			if (this.qrReader !== null) {
 				this.qrReader.stop();
 				this.qrReader = null;
@@ -211,7 +244,7 @@ class SendView extends DestructableView {
 	}
 
 
-	destruct(): Promise<void> {
+	destruct(): Promise < void > {
 		this.stopScan();
 		this.stopNfcScan();
 		swal.close();
@@ -245,11 +278,14 @@ class SendView extends DestructableView {
 						swal.showLoading();
 					}
 				});
-				TransactionsExplorer.createTx([{address: destinationAddress, amount: amountToSend}], self.paymentId, wallet, blockchainHeight,
-					function (numberOuts: number): Promise<any[]> {
+				TransactionsExplorer.createTx([{
+						address: destinationAddress,
+						amount: amountToSend
+					}], self.paymentId, wallet, blockchainHeight,
+					function (numberOuts: number): Promise < any[] > {
 						return blockchainExplorer.getRandomOuts(numberOuts);
-					}
-					, function (amount: number, feesAmount: number): Promise<void> {
+					},
+					function (amount: number, feesAmount: number): Promise < void > {
 						if (amount + feesAmount > wallet.unlockedAmount(blockchainHeight)) {
 							swal({
 								type: 'error',
@@ -263,14 +299,14 @@ class SendView extends DestructableView {
 							throw '';
 						}
 
-						return new Promise<void>(function (resolve, reject) {
-							setTimeout(function () {//prevent bug with swal when code is too fast
+						return new Promise < void > (function (resolve, reject) {
+							setTimeout(function () { //prevent bug with swal when code is too fast
 								swal({
 									title: i18n.t('sendPage.confirmTransactionModal.title'),
 									html: i18n.t('sendPage.confirmTransactionModal.content', {
-										amount:amount / Math.pow(10, config.coinUnitPlaces),
-										fees:feesAmount / Math.pow(10, config.coinUnitPlaces),
-										total:(amount+feesAmount) / Math.pow(10, config.coinUnitPlaces),
+										amount: amount / Math.pow(10, config.coinUnitPlaces),
+										fees: feesAmount / Math.pow(10, config.coinUnitPlaces),
+										total: (amount + feesAmount) / Math.pow(10, config.coinUnitPlaces),
 									}),
 									showCancelButton: true,
 									confirmButtonText: i18n.t('sendPage.confirmTransactionModal.confirmText'),
@@ -291,7 +327,14 @@ class SendView extends DestructableView {
 								}).catch(reject);
 							}, 1);
 						});
-					}).then(function (rawTxData: { raw: { hash: string, prvKey: string, raw: string }, signed: any }) {
+					}).then(function (rawTxData: {
+					raw: {
+						hash: string,
+						prvKey: string,
+						raw: string
+					},
+					signed: any
+				}) {
 					blockchainExplorer.sendRawTx(rawTxData.raw.raw).then(function () {
 						//save the tx private key
 						wallet.addTxPrivateKeyWithTxHash(rawTxData.raw.hash, rawTxData.raw.prvKey);
@@ -328,7 +371,9 @@ class SendView extends DestructableView {
 						swal({
 							type: 'error',
 							title: i18n.t('sendPage.transferExceptionModal.title'),
-							html: i18n.t('sendPage.transferExceptionModal.content', {details: JSON.stringify(data)}),
+							html: i18n.t('sendPage.transferExceptionModal.content', {
+								details: JSON.stringify(data)
+							}),
 							confirmButtonText: i18n.t('sendPage.transferExceptionModal.confirmText'),
 						});
 					});
@@ -340,14 +385,18 @@ class SendView extends DestructableView {
 							swal({
 								type: 'error',
 								title: i18n.t('sendPage.transferExceptionModal.title'),
-								html: i18n.t('sendPage.transferExceptionModal.content', {details: error}),
+								html: i18n.t('sendPage.transferExceptionModal.content', {
+									details: error
+								}),
 								confirmButtonText: i18n.t('sendPage.transferExceptionModal.confirmText'),
 							});
 						else
 							swal({
 								type: 'error',
 								title: i18n.t('sendPage.transferExceptionModal.title'),
-								html: i18n.t('sendPage.transferExceptionModal.content', {details: JSON.stringify(error)}),
+								html: i18n.t('sendPage.transferExceptionModal.content', {
+									details: JSON.stringify(error)
+								}),
 								confirmButtonText: i18n.t('sendPage.transferExceptionModal.confirmText'),
 							});
 					}
@@ -360,6 +409,7 @@ class SendView extends DestructableView {
 					confirmButtonText: i18n.t('sendPage.invalidAmountModal.confirmText'),
 				});
 			}
+			self.reset();
 		});
 	}
 
@@ -373,7 +423,10 @@ class SendView extends DestructableView {
 				clearTimeout(this.timeoutResolveAlias);
 
 			this.timeoutResolveAlias = setTimeout(function () {
-				blockchainExplorer.resolveOpenAlias(self.destinationAddressUser).then(function (data: { address: string, name: string | null }) {
+				blockchainExplorer.resolveOpenAlias(self.destinationAddressUser).then(function (data: {
+					address: string,
+					name: string | null
+				}) {
 					try {
 						// cnUtil.decode_address(data.address);
 						self.txDestinationName = data.name;
@@ -417,8 +470,7 @@ class SendView extends DestructableView {
 		try {
 			this.paymentIdValid = this.paymentId.length === 0 ||
 				(this.paymentId.length === 16 && (/^[0-9a-fA-F]{16}$/.test(this.paymentId))) ||
-				(this.paymentId.length === 64 && (/^[0-9a-fA-F]{64}$/.test(this.paymentId)))
-			;
+				(this.paymentId.length === 64 && (/^[0-9a-fA-F]{64}$/.test(this.paymentId)));
 		} catch (e) {
 			this.paymentIdValid = false;
 		}
