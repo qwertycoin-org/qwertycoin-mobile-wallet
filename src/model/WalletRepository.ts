@@ -16,6 +16,7 @@
 import {RawFullyEncryptedWallet, RawWallet, Wallet} from "./Wallet";
 import {CoinUri} from "./CoinUri";
 import {Storage} from "./Storage";
+import {Constants} from "./Constants";
 
 export class WalletRepository{
 
@@ -32,14 +33,18 @@ export class WalletRepository{
 			password = ('00000000000000000000000000000000'+password).slice(-32);
 		}
 		let privKey = new (<any>TextEncoder)("utf8").encode(password);
-		console.log('open wallet with nonce', rawWallet.nonce);
+		if (Constants.DEBUG_STATE) {
+			console.log('open wallet with nonce', rawWallet.nonce);
+		}
 		let nonce = new (<any>TextEncoder)("utf8").encode(rawWallet.nonce);
 
 		let decodedRawWallet = null;
 
 		//detect if old type or new type of wallet
 		if(typeof (<any>rawWallet).data !== 'undefined'){//RawFullyEncryptedWallet
-			console.log('new wallet format');
+			if (Constants.DEBUG_STATE) {
+				console.log('new wallet format');
+			}
 			let rawFullyEncrypted : RawFullyEncryptedWallet = <any>rawWallet;
 			let encrypted = new Uint8Array(<any>rawFullyEncrypted.data);
 			let decrypted = nacl.secretbox.open(encrypted, nonce, privKey);
@@ -52,7 +57,9 @@ export class WalletRepository{
 				decodedRawWallet = null;
 			}
 		}else{//RawWallet
-			console.log('old wallet format');
+			if (Constants.DEBUG_STATE) {
+				console.log('old wallet format');
+			}
 			let oldRawWallet : RawWallet = <any>rawWallet;
 			let encrypted = new Uint8Array(<any>oldRawWallet.encryptedKeys);
 			let decrypted = nacl.secretbox.open(encrypted, nonce, privKey);
@@ -74,7 +81,9 @@ export class WalletRepository{
 
 	static getLocalWalletWithPassword(password : string) : Promise<Wallet|null>{
 		return Storage.getItem('wallet', null).then((existingWallet : any) => {
-			//console.log(existingWallet);
+			if (Constants.DEBUG_STATE) {
+				console.log(existingWallet);
+			}
 			if(existingWallet !== null){
 				return this.decodeWithPassword(JSON.parse(existingWallet), password);
 			}else{

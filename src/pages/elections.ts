@@ -46,7 +46,6 @@ import {
 import {
     VueClass, VueVar, VueWatched
 } from "../lib/numbersLab/VueAnnotate";
-import { Election } from './../../platforms/android/app/build/intermediates/assets/debug/www/model/Elections';
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer = DependencyInjectorInstance().getInstance(Constants.BLOCKCHAIN_EXPLORER);

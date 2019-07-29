@@ -107,9 +107,8 @@
 		for(var i = 0;i < 50;++i) {
 			this.s[i] = 0;
 		}
-	};
-
-	Keccak.prototype.update = function(message) {
+    }
+    Keccak.prototype.update = function(message) {
 		var notString = typeof(message) != 'string';
 		if(notString && message.constructor == root.ArrayBuffer) {
 			message = new Uint8Array(message);
@@ -461,7 +460,7 @@
 			s[0] ^= RC[n];
 			s[1] ^= RC[n + 1];
 		}
-	}
+	};
 
 	if(!root.JS_SHA3_TEST && NODE_JS) {
 		module.exports = methods;

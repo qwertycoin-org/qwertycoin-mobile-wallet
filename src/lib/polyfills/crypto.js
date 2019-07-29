@@ -124,7 +124,7 @@
 		j = 0;
 		k = (this.N > key_length ? this.N : key_length);
 		for (; k; k--) {
-			var s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30)
+			var s = this.mt[i - 1] ^ (this.mt[i - 1] >>> 30);
 			this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525)))
 				+ init_key[j] + j;
 			/* non linear */
@@ -160,7 +160,7 @@
 	/* origin name genrand_int32 */
 	MersenneTwister.prototype.random_int = function () {
 		var y;
-		var mag01 = new Array(0x0, this.MATRIX_A);
+		var mag01 = [0x0, this.MATRIX_A];
 		/* mag01[x] = x * MATRIX_A  for x=0,1 */
 
 		if (this.mti >= this.N) { /* generate N words at one time */

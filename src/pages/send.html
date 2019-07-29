@@ -13,8 +13,34 @@
 			</div>
 		</div>
 		<div class="body-content" >
+
+			<div class="panel-balance">
+
+				<div class="body">
+
+					<div class="header-title">{{ $t("accountPage.balanceBlock.title") }}</div>
+
+					<div class="content">
+						<span class="walletAmount">{{ $n(walletAmount / currencyDivider) }}</span> QWC <br/>
+						<span>{{ $n(walletAmountCurrency / currencyDivider) }} {{ $t("accountPage.currencyBlock."+countrycurrency) }}</span>
+						<template class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
+						<br />{{ $t("accountPage.balanceBlock.unlocked") }}: <span
+							class="walletAmount">{{ $n(unlockedWalletAmount / currencyDivider) }}</span> QWC
+						</template>
+
+					</div>
+
+				</div>
+
+			</div>
+
 			<div class="panel">
 				<div class="body" >
+					<div class="field checkbox toggle">
+						<input type="checkbox" name="public" v-model="useCountryCurrency">
+						<label>{{ $t("sendPage.sendBlock.useCountryCurrency") }}</label>
+					</div>
+
 					<div class="field action" >
 						<label>{{ $t("sendPage.sendBlock.address.label") }}</label>
 						<div class="subfield" >
@@ -36,6 +62,8 @@
 							<b>{{ $t("sendPage.sendBlock.address.description") }}: </b>{{txDescription}}
 						</div>
 					</div>
+
+
 
 					<div class="field" >
 						<label>{{ $t("sendPage.sendBlock.amount.label") }}</label>

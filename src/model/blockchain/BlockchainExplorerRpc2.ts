@@ -19,6 +19,7 @@ import { TransactionsExplorer, TX_EXTRA_TAG_PUBKEY } from "../TransactionsExplor
 import { CryptoUtils } from "../CryptoUtils";
 import { Transaction } from "../Transaction";
 import { MathUtil } from "../MathUtil";
+import {Constants} from "../Constants";
 
 export class WalletWatchdog {
 
@@ -38,7 +39,9 @@ export class WalletWatchdog {
         this.workerProcessing = new Worker('./workers/TransferProcessingEntrypoint.js');
         this.workerProcessing.onmessage = function (data: MessageEvent) {
             let message: string | any = data.data;
-            // console.log(message);
+            if (Constants.DEBUG_STATE) {
+                console.log(message);
+            }
             if (message === 'ready') {
                 self.signalWalletUpdate();
             } else if (message === 'readyWallet') {
@@ -163,7 +166,9 @@ export class WalletWatchdog {
         //we destroy the worker in charge of decoding the transactions every 250 transactions to ensure the memory is not corrupted
         //cnUtil bug, see https://github.com/mymonero/mymonero-core-js/issues/8
         if (this.workerCountProcessed >= 250) {
-            console.log('Recreate worker..');
+            if (Constants.DEBUG_STATE) {
+                console.log('Recreate worker..');
+            }
             this.terminateWorker();
             this.initWorker();
             return;
@@ -228,16 +233,22 @@ export class WalletWatchdog {
             return;
         }
 
-        // console.log('checking');
+        if (Constants.DEBUG_STATE) {
+            console.log('checking');
+        }
         this.explorer.getHeight().then(function (height) {
-            // console.log(self.lastBlockLoading,height);
+            if (Constants.DEBUG_STATE) {
+                console.log(self.lastBlockLoading,height);
+            }
             if (height > self.lastMaximumHeight) self.lastMaximumHeight = height;
 
             if (self.lastBlockLoading !== height) {
                 let previousStartBlock = self.lastBlockLoading;
                 let startBlock = Math.floor(self.lastBlockLoading / 100) * 100;
-                // console.log('=>',self.lastBlockLoading, endBlock, height, startBlock, self.lastBlockLoading);
-                console.log('load block from ' + startBlock);
+                if (Constants.DEBUG_STATE) {
+                    // console.log('=>',self.lastBlockLoading, endBlock, height, startBlock, self.lastBlockLoading);
+                    console.log('load block from ' + startBlock);
+                }
                 self.explorer.getTransactionsForBlocks(previousStartBlock).then(function (transactions: RawDaemonTransaction[]) {
                     //to ensure no pile explosion
                     if (transactions.length > 0) {
@@ -342,12 +353,18 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                 method: 'GET',
             }).done(function (transactions: any) {
                 if (transactions !== null) {
-                    console.log("tx mempool:");
-                    console.log(transactions);
+                    if (Constants.DEBUG_STATE) {
+                        console.log("tx mempool:");
+                        console.log(transactions);
+                        console.log("node:");
+                        console.log(self.serverAddress);
+                    }
                     resolve(transactions);
                 }
             }).fail(function (data: any) {
-                console.log('REJECT');
+                if (Constants.DEBUG_STATE) {
+                    console.log('REJECT');
+                }
                 try {
                     console.log(JSON.parse(data.responseText));
                 } catch (e) {
@@ -417,16 +434,27 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                     }
                 }
 
-                console.log(txCandidates);
+                if (Constants.DEBUG_STATE) {
+                    console.log(txCandidates);
+                }
 
                 let selectedOuts = [];
                 for (let txsOutsHeight in txCandidates) {
                     let outIndexSelect = MathUtil.getRandomInt(0, txCandidates[txsOutsHeight].length - 1);
-                    console.log('select ' + outIndexSelect + ' for ' + txsOutsHeight + ' with length of ' + txCandidates[txsOutsHeight].length);
+                    if (Constants.DEBUG_STATE) {
+                        console.log('select '           +
+                                    outIndexSelect      +
+                                    ' for '             +
+                                    txsOutsHeight       +
+                                    ' with length of '  +
+                                    txCandidates[txsOutsHeight].length);
+                    }
                     selectedOuts.push(txCandidates[txsOutsHeight][outIndexSelect]);
                 }
 
-                console.log(selectedOuts);
+                if (Constants.DEBUG_STATE) {
+                    console.log(selectedOuts);
+                }
 
                 return selectedOuts;
             });

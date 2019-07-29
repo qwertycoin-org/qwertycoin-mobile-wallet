@@ -63,6 +63,8 @@ import {
 	NdefMessage,
 	Nfc
 } from "../model/Nfc";
+import {Currency} from "../model/Currency";
+import {Functions} from "../model/Functions";
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
@@ -87,12 +89,27 @@ class SendView extends DestructableView {
 	@VueVar(false) qrScanning!: boolean;
 	@VueVar(false) nfcAvailable!: boolean;
 
+	@VueVar(0) walletAmount!: number;
+	@VueVar(0) walletAmountCurrency!: number;
+	@VueVar(0) unlockedWalletAmount!: number;
+	@VueVar(0) countryCurrencyCache!: number;
+	@VueVar(false) useCountryCurrency!: boolean;
+
+	@VueVar(Math.pow(10, config.coinUnitPlaces)) currencyDivider!: number;
+
+	@VueVar('btc') countrycurrency !: string;
+	@VueVar(0) currentScanBlock!: number;
+	@VueVar(0) blockchainHeight!: number;
+
 	@Autowire(Nfc.name) nfc!: Nfc;
 
 	qrReader: QRReader | null = null;
 	redirectUrlAfterSend: string | null = null;
 
 	ndefListener: ((data: NdefMessage) => void) | null = null;
+
+	intervalRefresh: number = 0;
+
 
 	constructor(container: string) {
 		super(container);
@@ -108,6 +125,44 @@ class SendView extends DestructableView {
 		if (redirect !== null) this.redirectUrlAfterSend = decodeURIComponent(redirect);
 
 		this.nfcAvailable = this.nfc.has;
+
+		this.walletAmount = wallet.amount;
+		this.unlockedWalletAmount = wallet.unlockedAmount(wallet.lastHeight);
+		let self = this;
+		this.intervalRefresh = setInterval(function () {
+			self.refresh();
+		}, 1 * 1000);
+		this.refresh();
+	}
+
+	refresh() {
+		let self = this;
+		blockchainExplorer.getHeight().then(function (height: number) {
+			self.blockchainHeight = height;
+		});
+		self.refreshWallet();
+	}
+
+	refreshWallet() {
+		let self = this;
+
+		this.currentScanBlock = wallet.lastHeight;
+		this.walletAmount = wallet.amount;
+		this.unlockedWalletAmount = wallet.unlockedAmount(this.currentScanBlock);
+
+		Currency.getCurrency().then((currency : string) => {
+			if(currency == null)
+				currency = 'btc';
+			this.countrycurrency = currency;
+		});
+
+		let randInt = Functions.randInt();
+		$.ajax({
+			url: config.apiUrl[randInt] + 'price.php?currency=' + self.countrycurrency
+		}).done(function (data: any) {
+			self.countryCurrencyCache = data.value;
+			self.walletAmountCurrency = wallet.amount * data.value;
+		})
 	}
 
 	reset() {
@@ -255,6 +310,7 @@ class SendView extends DestructableView {
 		let self = this;
 		blockchainExplorer.getHeight().then(function (blockchainHeight: number) {
 			let amount = parseFloat(self.amountToSend);
+
 			if (self.destinationAddress !== null) {
 				//todo use BigInteger
 				if (amount * Math.pow(10, config.coinUnitPlaces) > wallet.unlockedAmount(blockchainHeight)) {
@@ -268,7 +324,13 @@ class SendView extends DestructableView {
 				}
 
 				//TODO use biginteger
-				let amountToSend = amount * Math.pow(10, config.coinUnitPlaces);
+				let amountToSend;
+				if (self.useCountryCurrency) {
+					let temp = amount / self.countryCurrencyCache;
+					amountToSend = Math.floor(temp * Math.pow(10, config.coinUnitPlaces));
+				} else {
+					amountToSend = amount * Math.pow(10, config.coinUnitPlaces);
+				}
 				let destinationAddress = self.destinationAddress;
 
 				swal({
@@ -347,7 +409,8 @@ class SendView extends DestructableView {
 						let promise = Promise.resolve();
 						if (
 							destinationAddress === 'QWC1L4aAh5i7cbB813RQpsKP6pHXT2ymrbQCwQnQ3DC4QiyuhBUZw8dhAaFp8wH1Do6J9Lmim6ePv1SYFYs97yNV2xvSbTGc7s' ||
-							destinationAddress === 'QWC1K6XEhCC1WsZzT9RRVpc1MLXXdHVKt2BUGSrsmkkXAvqh52sVnNc1pYmoF2TEXsAvZnyPaZu8MW3S8EWHNfAh7X2xa63P7Y'
+							destinationAddress === 'QWC1K6XEhCC1WsZzT9RRVpc1MLXXdHVKt2BUGSrsmkkXAvqh52sVnNc1pYmoF2TEXsAvZnyPaZu8MW3S8EWHNfAh7X2xa63P7Y' ||
+							destinationAddress === 'QWC1Nsegh9NRyaSH7A1hch59VpvsjjwZwGRFvEUXFbs9QMj145gXJQDbdcR5r6rTQPX6hPy1ij5SCTr2SFkrnuNBAH1Gh2EshP'
 						) {
 							promise = swal({
 								type: 'success',
@@ -473,6 +536,15 @@ class SendView extends DestructableView {
 				(this.paymentId.length === 64 && (/^[0-9a-fA-F]{64}$/.test(this.paymentId)));
 		} catch (e) {
 			this.paymentIdValid = false;
+		}
+	}
+
+	@VueWatched()
+	useCountryCurrencyWatch() {
+		if (this.useCountryCurrency) {
+			Currency.setUseCountryCurrency('true');
+		} else {
+			Currency.setUseCountryCurrency('false');
 		}
 	}
 

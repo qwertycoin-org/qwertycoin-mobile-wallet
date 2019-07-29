@@ -15,11 +15,12 @@
 			<div class="body">
 				<div class="header-title">{{ $t("accountPage.balanceBlock.title") }}</div>
 				<div class="content">
-					<span class="walletAmount">{{ $n(walletAmount / currencyDivider) }}</span> QWC
-					<tempate class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
+					<span class="walletAmount">{{ $n(walletAmount / currencyDivider) }}</span> QWC <br/>
+					<span class="walletAmountCurrency">{{ $n(walletAmountCurrency / currencyDivider) }} {{ $t("accountPage.currencyBlock."+countrycurrency) }}</span>
+					<template class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
 						<br />{{ $t("accountPage.balanceBlock.unlocked") }}: <span
 							class="walletAmount">{{ $n(unlockedWalletAmount / currencyDivider) }}</span> QWC
-					</tempate>
+					</template>
 				</div>
 			</div>
 		</div>
@@ -65,10 +66,11 @@
 											@click="moreInfoOnTx2(transaction)"></i>
 									</td>
 								</tr>
+								<!--
 								<tr v-if="transaction.paymentId !== ''">
 									<td colspan="4" class="paymentId">{{transaction.paymentId}}</td>
-									<!--UNDER-->
 								</tr>
+								-->
 							</template>
 							<tr v-if="transactions.length == 0">
 								<td colspan="4" class="noTransactions">

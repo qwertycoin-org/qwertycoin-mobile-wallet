@@ -314,7 +314,7 @@
 
 			this._i18n = null;
 		}
-	}
+	};
 
 	/*  */
 
@@ -396,7 +396,7 @@
 
 			return h(props.tag, data, i18n.i(path, locale, params))
 		}
-	}
+	};
 
 	/*  */
 
@@ -615,10 +615,10 @@
 			switch (token.type) {
 				case 'text':
 					compiled.push(token.value);
-					break
+					break;
 				case 'list':
 					compiled.push(values[parseInt(token.value, 10)]);
-					break
+					break;
 				case 'named':
 					if (mode === 'named') {
 						compiled.push((values)[token.value]);
@@ -627,7 +627,7 @@
 							warn(("Type of token '" + (token.type) + "' and format of value '" + mode + "' don't match!"));
 						}
 					}
-					break
+					break;
 				case 'unknown':
 				{
 					warn("Detect 'unknown' type of token!");
@@ -756,12 +756,12 @@
 			case 0x22: // "
 			case 0x27: // '
 			case 0x30: // 0
-				return ch
+				return ch;
 
 			case 0x5F: // _
 			case 0x24: // $
 			case 0x2D: // -
-				return 'ident'
+				return 'ident';
 
 			case 0x20: // Space
 			case 0x09: // Tab

@@ -25,6 +25,7 @@ import {BlockchainExplorerRpc2} from "../model/blockchain/BlockchainExplorerRpc2
 import {QRReader} from "../model/QRReader";
 import {CoinUri} from "../model/CoinUri";
 import {Mnemonic} from "../model/Mnemonic";
+import {Constants} from "../model/Constants";
 
 AppState.enableLeftMenu();
 
@@ -193,7 +194,9 @@ class ImportView extends DestructableView{
 	stopScan(){
 		if(typeof window.QRScanner !== 'undefined') {
 			window.QRScanner.cancelScan(function(status:any){
-				console.log(status);
+				if (Constants.DEBUG_STATE) {
+					console.log(status);
+				}
 			});
 			window.QRScanner.hide();
 			$('body').removeClass('transparent');

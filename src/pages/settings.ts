@@ -13,44 +13,19 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-	DestructableView
-} from "../lib/numbersLab/DestructableView";
-import {
-	VueVar,
-	VueWatched
-} from "../lib/numbersLab/VueAnnotate";
-import {
-	TransactionsExplorer
-} from "../model/TransactionsExplorer";
-import {
-	WalletRepository
-} from "../model/WalletRepository";
-import {
-	BlockchainExplorerRpc2,
-	WalletWatchdog
-} from "../model/blockchain/BlockchainExplorerRpc2";
-import {
-	DependencyInjectorInstance
-} from "../lib/numbersLab/DependencyInjector";
-import {
-	Constants
-} from "../model/Constants";
-import {
-	Wallet
-} from "../model/Wallet";
-import {
-	AppState
-} from "../model/AppState";
-import {
-	Storage
-} from "../model/Storage";
-import {
-	Translations
-} from "../model/Translations";
-import {
-	BlockchainExplorerProvider
-} from "../providers/BlockchainExplorerProvider";
+import {DestructableView} from "../lib/numbersLab/DestructableView";
+import {VueVar,VueWatched} from "../lib/numbersLab/VueAnnotate";
+import {TransactionsExplorer} from "../model/TransactionsExplorer";
+import {WalletRepository} from "../model/WalletRepository";
+import {BlockchainExplorerRpc2,	WalletWatchdog} from "../model/blockchain/BlockchainExplorerRpc2";
+import {	DependencyInjectorInstance} from "../lib/numbersLab/DependencyInjector";
+import {Constants} from "../model/Constants";
+import {Wallet} from "../model/Wallet";
+import {AppState} from "../model/AppState";
+import {Storage} from "../model/Storage";
+import {Translations} from "../model/Translations";
+import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
+import {Currency} from "../model/Currency";
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
@@ -71,6 +46,8 @@ class SendView extends DestructableView {
 	@VueVar('') nativeVersionNumber!: string;
 	@VueVar('') nativeAppName!: string;
 
+	@VueVar('btc') countrycurrency!: string;
+
 
 	constructor(container: string) {
 		super(container);
@@ -87,6 +64,10 @@ class SendView extends DestructableView {
 
 		Translations.getLang().then((userLang: string) => {
 			this.language = userLang;
+		});
+
+		Currency.getCurrency().then((currency: string) => {
+			this.countrycurrency = currency;
 		});
 
 		if (typeof ( < any > window).cordova !== 'undefined' && typeof ( < any > window).cordova.getAppVersion !== 'undefined') {
@@ -127,6 +108,10 @@ class SendView extends DestructableView {
 		});
 	}
 
+	@VueWatched() countrycurrencyWatch() {
+		this.updateCurrencySettings();
+	}
+
 	@VueWatched() readSpeedWatch() {
 		this.updateWalletOptions();
 	}
@@ -148,6 +133,10 @@ class SendView extends DestructableView {
 		options.checkMinerTx = this.checkMinerTx;
 		wallet.options = options;
 		walletWatchdog.signalWalletUpdate();
+	}
+
+	private updateCurrencySettings() {
+		Currency.setCurrency(this.countrycurrency);
 	}
 
 	updateWalletSettings() {

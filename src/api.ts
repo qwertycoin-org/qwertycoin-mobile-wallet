@@ -14,6 +14,7 @@
  */
 
 import {WalletRepository} from "./model/WalletRepository";
+import {Constants} from "./model/Constants";
 
 function sendMessageToParent(type : string, data : any){
 	window.parent.postMessage({
@@ -23,7 +24,10 @@ function sendMessageToParent(type : string, data : any){
 }
 
 window.addEventListener('message', function(e : MessageEvent){
-	console.log(e);
+	if (Constants.DEBUG_STATE) {
+		console.log(e);
+	}
+
 	if(e.data == 'hasWallet'){
 		sendMessageToParent('hasWallet', WalletRepository.hasOneStored());
 	}

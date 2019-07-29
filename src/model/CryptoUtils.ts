@@ -14,6 +14,7 @@
  */
 
 import {CnUtilNative} from "./CnUtilNative";
+import {Constants} from "./Constants";
 
 export class CryptoUtils{
 
@@ -41,7 +42,9 @@ export class CryptoUtils{
 		let res = new Uint8Array(hex.length / 2);
 		for (let i = 0; i < hex.length / 2; ++i) {
 			res[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-			// console.log(hex.slice(i * 2, i * 2 + 2), res[i]);
+			if (Constants.DEBUG_STATE) {
+				console.log(hex.slice(i * 2, i * 2 + 2), res[i]);
+			}
 		}
 		return res;
 	}
@@ -84,12 +87,16 @@ export class CryptoUtils{
 		return vali;*/
 		// return JSBigInt.parse(test,16);
 		// let bytes = Crypto.hextobin(test);
-		// console.log('bytes',bytes, test,swapEndianC(test));
-		// console.log(JSBigInt.parse(swapEndianC(test),16).valueOf());
-		// console.log(JSBigInt.parse(test.substr(0,12),16).valueOf());
+		if (Constants.DEBUG_STATE) {
+			// console.log('bytes',bytes, test,swapEndianC(test));
+			// console.log(JSBigInt.parse(swapEndianC(test),16).valueOf());
+			// console.log(JSBigInt.parse(test.substr(0,12),16).valueOf());
+		}
 		let vali = 0;
 		for (let j = 7; j >= 0; j--) {
-			// console.log(vali,vali*256,bytes[j]);
+			if(Constants.DEBUG_STATE) {
+				// console.log(vali,vali*256,bytes[j]);
+			}
 			vali = (vali * 256 + parseInt(test.slice(j*2, j*2+2), 16));
 		}
 		return vali;
@@ -99,19 +106,27 @@ export class CryptoUtils{
 		// CHECK_AND_ASSERT_MES(rv.type == RCTTypeSimple || rv.type == RCTTypeSimpleBulletproof, false, "decodeRct called on non simple rctSig");
 		// CHECK_AND_ASSERT_THROW_MES(i < rv.ecdhInfo.size(), "Bad index");
 		// CHECK_AND_ASSERT_THROW_MES(rv.outPk.size() == rv.ecdhInfo.size(), "Mismatched sizes of rv.outPk and rv.ecdhInfo");
-// console.log(i < rv.ecdhInfo.length ? undefined : 'Bad index');
-// console.log(rv.outPk.length == rv.ecdhInfo.length ? undefined : 'Mismatched sizes of rv.outPk and rv.ecdhInfo');
+		if (Constants.DEBUG_STATE) {
+			console.log(i < rv.ecdhInfo.length ? undefined : 'Bad index');
+			console.log(rv.outPk.length == rv.ecdhInfo.length ? undefined : 'Mismatched sizes of rv.outPk and rv.ecdhInfo');
+		}
 
 		//mask amount and mask
-		// console.log('decode',rv.ecdhInfo[i], sk, h2d(rv.ecdhInfo[i].amount));
+		if (Constants.DEBUG_STATE) {
+			// console.log('decode',rv.ecdhInfo[i], sk, h2d(rv.ecdhInfo[i].amount));
+		}
 		let ecdh_info = cnUtil.decode_rct_ecdh(rv.ecdhInfo[i], sk);
-		// console.log('ecdh_info',ecdh_info);
+		if (Constants.DEBUG_STATE) {
+			console.log('ecdh_info',ecdh_info);
+		}
 		// mask = ecdh_info.mask;
 		let amount = ecdh_info.amount;
 		let C = rv.outPk[i].mask;
 
-		// console.log('amount', amount);
-		// console.log('C', C);
+		if (Constants.DEBUG_STATE) {
+			console.log('amount', amount);
+			console.log('C', C);
+		}
 		// DP("C");
 		// DP(C);
 		// key Ctmp;
@@ -144,7 +159,9 @@ export class CryptoUtils{
 
 		try
 		{
-			// console.log(rv.type,'RCTTypeSimple='+RCTTypeSimple,'RCTTypeFull='+RCTTypeFull);
+			if (Constants.DEBUG_STATE) {
+				// console.log(rv.type,'RCTTypeSimple='+RCTTypeSimple,'RCTTypeFull='+RCTTypeFull);
+			}
 			switch (rv.type)
 			{
 				case CryptoUtils.RCTTypeSimple:

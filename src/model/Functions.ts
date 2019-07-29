@@ -1,11 +1,11 @@
 /**
  *     Copyright (c) 2019, ExploShot
  *     Copyright (c) 2019, The Qwertycoin Project
- * 
+ *
  *     All rights reserved.
  *     Redistribution and use in source and binary forms, with or without modification,
  *     are permitted provided that the following conditions are met:
- * 
+ *
  *     ==> Redistributions of source code must retain the above copyright notice,
  *         this list of conditions and the following disclaimer.
  *     ==> Redistributions in binary form must reproduce the above copyright notice,
@@ -14,7 +14,7 @@
  *     ==> Neither the name of Qwertycoin nor the names of its contributors
  *         may be used to endorse or promote products derived from this software
  *          without specific prior written permission.
- * 
+ *
  *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  *     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  *     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,21 +28,8 @@
  *     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
- export interface Answer {
-    answer: string,
-    address: string,
-    balance: string,
-    votes: string
+export class Functions {
+    public static randInt() {
+        return Math.floor(Math.random() * Math.floor(config.apiUrl.length));
+    }
 }
-
-export interface Election {
-    questionID: string,
-    category: string,
-    question: string,
-    description: string,
-    QWCPerVote: string,
-    minimumVotes: string,
-    neededBTC: string,
-    answers: Answer[],
-    active: boolean
- }

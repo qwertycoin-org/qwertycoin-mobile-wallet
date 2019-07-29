@@ -136,7 +136,9 @@ export class AppState {
 						let memoryWallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 						if (memoryWallet === null) {
 							WalletRepository.getLocalWalletWithPassword(savePassword).then((wallet: Wallet | null) => {
-								console.log(wallet);
+								if(Constants.DEBUG_STATE) {
+									console.log(wallet);
+								}
 								if (wallet !== null) {
 									wallet.recalculateIfNotViewOnly();
 

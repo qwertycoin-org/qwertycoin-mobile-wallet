@@ -45,7 +45,6 @@ export class WalletOptions{
 	}
 }
 
-
 export type RawWallet = {
 	transactions : any[],
 	txPrivateKeys?:any,
@@ -252,7 +251,7 @@ export class Wallet extends Observable{
 	}
 
 	getTransactionsCopy() : Transaction[]{
-		let news: any[] = [];
+		let news = [];
 		for(let transaction of this.transactions){
 			news.push(Transaction.fromRaw(transaction.export()));
 			

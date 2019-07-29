@@ -17,7 +17,7 @@
 	font-family: robotoLatin;
 	src:
 		url('../fonts/roboto-v18-latin-regular.woff2') format('woff2'),
-		url('../fonts/roboto-v18-latin-regular.woff') format('woff'),
+		url('../fonts/roboto-v18-latin-regular.woff') format('woff');
 }
 
 /* Create two equal columns that floats next to each other */
@@ -47,7 +47,7 @@ html {
 	padding: 0;
 	min-height: 100%;
 	overflow-x: hidden;
-	font-family: robotoLatin;
+	font-family: robotoLatin, serif;
 }
 
 div,
@@ -69,7 +69,7 @@ body {
 	overflow-y: hidden;
 	font-weight: normal;
 	background: #f7f7f7;
-	font-family: robotoLatin;
+	font-family: robotoLatin, serif;
 }
 
 body.menuHidden {
@@ -314,10 +314,9 @@ body.menuDisabled #page {
 }
 
 #copyright {
-	padding: 30px 0;
 	color: #474E5D;
 	font-size: 14px;
-	padding-left: 280px;
+	padding: 30px 0 30px 280px;
 	text-align: center;
 	width: 100%;
 }
@@ -359,6 +358,10 @@ body.transparent #copyright {
 	font-size: 7vw;
 }
 
+.walletAmountCurrency {
+	font-size: 5vw;
+}
+
 .contacts table {
 	width: 100%;
 	border-collapse: collapse;
@@ -381,13 +384,13 @@ body.transparent #copyright {
 	padding: 8px 0;
 }
 
-.contacts .contact .contact-icon {
+.contacts contact .contact-icon {
 	font-size: 5vw;
 	width: 5%;
 	padding-left: 5px;
 }
 
-.contacts .contact .contactname {
+.contacts contact .contactname {
 	width: 45%;
 	font-size: 5vw;
 	margin-left: 2vw;
@@ -616,7 +619,6 @@ body.transparent #copyright {
 	z-index: 100;
 	-webkit-transition: all 0.4s;
 	-moz-transition: all 0.4s;
-	-ms-transition: all 0.4s;
 	-o-transition: all 0.4s;
 	transition: all 0.4s;
 }
@@ -867,9 +869,7 @@ body.native .indexTab .mainBlock>.actions {
 .indexTab .block h3 {
 	color: #252565;
 	font-size: 24px;
-	margin: 0;
-	margin-bottom: 5px;
-	margin-top: 8px;
+	margin: 8px 0 5px;
 	font-weight: normal;
 }
 
@@ -1018,7 +1018,6 @@ body {
 	/*margin-bottom: 5vh;*/
 	background-color: #252565;
 	text-align: right;
-	height: 100%;
 }
 
 .body-header .header-title-large {
@@ -1162,8 +1161,6 @@ body {
 	line-height: 1.4285em;
 	color: rgba(0, 0, 0, .87);
 	-webkit-transition: opacity .1s ease, color .1s ease, background .1s ease, -webkit-box-shadow .1s ease;
-	transition: opacity .1s ease, color .1s ease, background .1s ease, -webkit-box-shadow .1s ease;
-	transition: opacity .1s ease, color .1s ease, background .1s ease, box-shadow .1s ease;
 	transition: opacity .1s ease, color .1s ease, background .1s ease, box-shadow .1s ease, -webkit-box-shadow .1s ease;
 	border-radius: .28571429rem;
 	-webkit-box-shadow: 0 0 0 1px rgba(34, 36, 38, .22) inset, 0 0 0 0 transparent;
@@ -1401,25 +1398,18 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 17px;
-	height: 17px;
 	content: '';
 	background: #fff;
-	border-radius: .21428571rem;
 	-webkit-transition: border .1s ease, opacity .1s ease, -webkit-transform .1s ease, -webkit-box-shadow .1s ease;
-	transition: border .1s ease, opacity .1s ease, -webkit-transform .1s ease, -webkit-box-shadow .1s ease;
-	transition: border .1s ease, opacity .1s ease, transform .1s ease, box-shadow .1s ease;
-	transition: border .1s ease, opacity .1s ease, transform .1s ease, box-shadow .1s ease, -webkit-transform .1s ease, -webkit-box-shadow .1s ease;
+	transition: border .1s ease, opacity .1s ease, transform .1s ease, box-shadow .1s ease,
+				-webkit-transform .1s ease,
+				-webkit-box-shadow .1s ease;
 	border: 1px solid #d4d4d5;
 
 	display: block;
-	position: absolute;
-	content: '';
 	z-index: 1;
 	-webkit-transform: none;
 	transform: none;
-	border: none;
-	top: 0;
 	background: rgba(0, 0, 0, .05);
 	-webkit-box-shadow: none;
 	box-shadow: none;
@@ -1515,7 +1505,6 @@ body {
 	-webkit-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
 	border-radius: 500rem;
-	border-color: #767676 transparent transparent;
 	border-style: solid;
 	border-width: .2em;
 	-webkit-box-shadow: 0 0 0 1px transparent;

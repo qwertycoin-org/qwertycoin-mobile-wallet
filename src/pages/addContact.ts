@@ -59,7 +59,7 @@ class AddContactView extends DestructableView {
     }
 
     addContact() {
-        let contact = { Name: this.contactName, Address: this.contactAddress }
+        let contact = { Name: this.contactName, Address: this.contactAddress };
         if(AddContactView.hasOneStored()) {
             swal({
                 type:'success',

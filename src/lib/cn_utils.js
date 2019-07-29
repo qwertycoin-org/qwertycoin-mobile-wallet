@@ -414,7 +414,7 @@ var cnUtil = (function(initConfig) {
 		var decrypted_payment_id = this.hex_xor(payment_id8, pid_key);
 
 		return decrypted_payment_id;
-	}
+	};
 
 	// Generate keypair from seed
 	this.generate_keys_old = function(seed) {
@@ -1072,7 +1072,7 @@ var cnUtil = (function(initConfig) {
 		bb.ee = hash_to_scalar(ltemp);
 		//compute the rest from 0 to secret index
 		for (var i = 0; i < nrings; i++){
-			var cc = bb.ee
+			var cc = bb.ee;
 			for (var j = 0; j < iv[i]; j++){
 				bb.s[j][i] = random_scalar();
 				var LL = ge_double_scalarmult_base_vartime(cc, pm[j][i], bb.s[j][i]);
@@ -1098,7 +1098,7 @@ var cnUtil = (function(initConfig) {
 		var sig = {
 			Ci: []
 			//exp: exponent //doesn't exist for now
-		}
+		};
 		/*payload stuff - ignore for now
 		seeds = new Array(3);
 		for (var i = 0; i < seeds.length; i++){
@@ -1152,7 +1152,7 @@ var cnUtil = (function(initConfig) {
 
 
 	function array_hash_to_scalar(array){
-		var buf = ""
+		var buf = "";
 		for (var i = 0; i < array.length; i++){
 			if (typeof array[i] !== "string"){throw "unexpected array element";}
 			buf += array[i];
@@ -1251,7 +1251,7 @@ var cnUtil = (function(initConfig) {
 		var buf = serialize_range_proofs(rv);
 		hashes += this.cn_fast_hash(buf);
 		return this.cn_fast_hash(hashes);
-	}
+	};
 
 	function serialize_range_proofs(rv) {
 		var buf = "";

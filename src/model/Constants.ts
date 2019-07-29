@@ -15,4 +15,5 @@
 
 export class Constants{
 	static BLOCKCHAIN_EXPLORER = 'blockchainExplorer';
+	static DEBUG_STATE = false;
 }
