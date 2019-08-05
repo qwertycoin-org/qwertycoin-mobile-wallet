@@ -39,6 +39,7 @@ matrix:
         - android-sdk-preview-license-.+
         - android-sdk-license-.+
         - google-gdk-license-.+
+
 #    - os: osx
 #      language: objective-c
 #      osx_image: xcode10.2
@@ -68,8 +69,18 @@ before_install:
 
 script:
   - yarn install
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+    cordova platform add ios --nofetch
+    cordova build ios --release
+    mkdir -p output
+    tar zcvf output/app-release-unsigned.app.tgz platforms/ios/build/emulator/Qwertycoin-Mobile-Wallet.app
+    fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+    cordova platform add android --nofetch
+    cordova build android --release
+    mkdir -p output
+    cp platforms/android/build/outputs/apk/app-release-unsigned.apk output/qwertycoin-mobile-wallet-release-unsigned.apk
+    fi
 
 deploy:
   provider: releases
