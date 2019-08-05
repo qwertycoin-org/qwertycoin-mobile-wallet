@@ -13,18 +13,28 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import { BlockchainExplorer } from "./BlockchainExplorer";
-import { Wallet } from "../Wallet";
-import { TransactionsExplorer, TX_EXTRA_TAG_PUBKEY } from "../TransactionsExplorer";
-import { CryptoUtils } from "../CryptoUtils";
-import { Transaction } from "../Transaction";
-import { MathUtil } from "../MathUtil";
+import {BlockchainExplorer} from "./BlockchainExplorer";
+import {Wallet} from "../Wallet";
+import {TransactionsExplorer} from "../TransactionsExplorer";
+import {Transaction} from "../Transaction";
+import {MathUtil} from "../MathUtil";
 import {Constants} from "../Constants";
 
 export class WalletWatchdog {
 
     wallet: Wallet;
     explorer: BlockchainExplorerRpc2;
+    intervalMempool = 0;
+    stopped: boolean = false;
+    transactionsToProcess: RawDaemonTransaction[] = [];
+    intervalTransactionsProcess = 0;
+    workerProcessing !: Worker;
+    workerProcessingReady = false;
+    workerProcessingWorking = false;
+    workerCurrentProcessing: RawDaemonTransaction[] = [];
+    workerCountProcessed = 0;
+    lastBlockLoading = -1;
+    lastMaximumHeight = 0;
 
     constructor(wallet: Wallet, explorer: BlockchainExplorerRpc2) {
         this.wallet = wallet;
@@ -71,7 +81,7 @@ export class WalletWatchdog {
         this.lastBlockLoading = -1;//reset scanning
         this.workerProcessing.postMessage({
             type: 'initWallet',
-            wallet:this.wallet.exportToRaw()
+            wallet: this.wallet.exportToRaw()
         });
         clearInterval(this.intervalTransactionsProcess);
         this.intervalTransactionsProcess = setInterval(function () {
@@ -79,7 +89,6 @@ export class WalletWatchdog {
         }, this.wallet.options.readSpeed);
     }
 
-    intervalMempool = 0;
     initMempool() {
         let self = this;
         if (this.intervalMempool === 0) {
@@ -89,8 +98,6 @@ export class WalletWatchdog {
         }
         self.checkMempool();
     }
-
-    stopped: boolean = false;
 
     stop() {
         clearInterval(this.intervalTransactionsProcess);
@@ -114,7 +121,8 @@ export class WalletWatchdog {
                         self.wallet.txsMem.push(tx);
                     }
                 }
-        }).catch(function () { });
+        }).catch(function () {
+        });
         return true;
     }
 
@@ -125,15 +133,6 @@ export class WalletWatchdog {
         this.workerProcessingWorking = false;
         this.workerCountProcessed = 0;
     }
-
-    transactionsToProcess: RawDaemonTransaction[] = [];
-    intervalTransactionsProcess = 0;
-
-    workerProcessing !: Worker;
-    workerProcessingReady = false;
-    workerProcessingWorking = false;
-    workerCurrentProcessing: RawDaemonTransaction[] = [];
-    workerCountProcessed = 0;
 
     checkTransactions(rawTransactions: RawDaemonTransaction[]) {
         for (let rawTransaction of rawTransactions) {
@@ -155,14 +154,14 @@ export class WalletWatchdog {
 
     checkTransactionsInterval() {
 
-        //somehow we're repeating and regressing back to re-process Tx's 
+        //somehow we're repeating and regressing back to re-process Tx's
         //loadHistory getting into a stack overflow ?
-        //need to work out timinings and ensure process does not reload when it's already running... 
+        //need to work out timinings and ensure process does not reload when it's already running...
 
         if (this.workerProcessingWorking || !this.workerProcessingReady) {
             return;
         }
-        
+
         //we destroy the worker in charge of decoding the transactions every 250 transactions to ensure the memory is not corrupted
         //cnUtil bug, see https://github.com/mymonero/mymonero-core-js/issues/8
         if (this.workerCountProcessed >= 250) {
@@ -206,16 +205,12 @@ export class WalletWatchdog {
                 self.checkTransactionsInterval();
             }, this.wallet.options.readSpeed);
         }
-        
+
     }
-
-
-    lastBlockLoading = -1;
-    lastMaximumHeight = 0;
 
     loadHistory() {
         if (this.stopped) return;
-        
+
         if (this.lastBlockLoading === -1) this.lastBlockLoading = this.wallet.lastHeight;
         let self = this;
         //don't reload until it's finished processing the last batch of transactions
@@ -238,7 +233,7 @@ export class WalletWatchdog {
         }
         this.explorer.getHeight().then(function (height) {
             if (Constants.DEBUG_STATE) {
-                console.log(self.lastBlockLoading,height);
+                console.log(self.lastBlockLoading, height);
             }
             if (height > self.lastMaximumHeight) self.lastMaximumHeight = height;
 
@@ -290,6 +285,14 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
 
     heightCache = 0;
     heightLastTimeRetrieve = 0;
+    scannedHeight: number = 0;
+
+    // getDaemonUrl(){
+    // 	return this.testnet ? 'http://localhost:48081/' : 'http://localhost:38081/';
+    // }
+    nonRandomBlockConsumed = false;
+    existingOuts: any[] = [];
+
     getHeight(): Promise<number> {
         if (Date.now() - this.heightLastTimeRetrieve < 20 * 1000 && this.heightCache !== 0) {
             return Promise.resolve(this.heightCache);
@@ -300,8 +303,7 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
             $.ajax({
                 url: self.serverAddress + 'getheight.php',
                 method: 'POST',
-                data: JSON.stringify({
-                })
+                data: JSON.stringify({})
             }).done(function (raw: any) {
                 // self.heightCache = raw.height;
                 // resolve(raw.height);
@@ -312,12 +314,6 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
             });
         });
     }
-
-    // getDaemonUrl(){
-    // 	return this.testnet ? 'http://localhost:48081/' : 'http://localhost:38081/';
-    // }
-
-    scannedHeight: number = 0;
 
     getScannedHeight(): number {
         return this.scannedHeight;
@@ -335,8 +331,7 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
             $.ajax({
                 url: self.serverAddress + 'blockchain.php?height=' + startBlock,
                 method: 'GET',
-                data: JSON.stringify({
-                })
+                data: JSON.stringify({})
             }).done(function (transactions: any) {
                 resolve(transactions);
             }).fail(function (data: any) {
@@ -375,9 +370,6 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
         });
     }
 
-    nonRandomBlockConsumed = false;
-
-    existingOuts: any[] = [];
     getRandomOuts(nbOutsNeeded: number, initialCall = true): Promise<any[]> {
         let self = this;
         if (initialCall) {
@@ -422,8 +414,8 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                         //let globalIndex = output_idx_in_tx;
                         //if (typeof tx.global_index_start !== 'undefined')
                         //    globalIndex += tx.global_index_start;
-						let globalIndex = tx.outputs[output_idx_in_tx].globalIndex;
-                       
+                        let globalIndex = tx.outputs[output_idx_in_tx].globalIndex;
+
                         let newOut = {
                             public_key: tx.outputs[output_idx_in_tx].output.target.data.key,
                             global_index: globalIndex,
@@ -442,12 +434,12 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                 for (let txsOutsHeight in txCandidates) {
                     let outIndexSelect = MathUtil.getRandomInt(0, txCandidates[txsOutsHeight].length - 1);
                     if (Constants.DEBUG_STATE) {
-                        console.log('select '           +
-                                    outIndexSelect      +
-                                    ' for '             +
-                                    txsOutsHeight       +
-                                    ' with length of '  +
-                                    txCandidates[txsOutsHeight].length);
+                        console.log('select ' +
+                            outIndexSelect +
+                            ' for ' +
+                            txsOutsHeight +
+                            ' with length of ' +
+                            txCandidates[txsOutsHeight].length);
                     }
                     selectedOuts.push(txCandidates[txsOutsHeight][outIndexSelect]);
                 }
