@@ -61,6 +61,7 @@ before_install:
     jq ios-deploy cocoapods ; rvm use system ; pod setup ; fi
   - nvm install 11
   - yarn global add cordova
+  - mkdir www
 
 #before_script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/addkeys.sh ; fi
