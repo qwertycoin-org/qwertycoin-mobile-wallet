@@ -71,7 +71,8 @@ before_install:
 
 script:
   - yarn install
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
 
 deploy:
   provider: releases
