@@ -4,8 +4,7 @@ global.config = {
     apiUrl: [
         "https://01.cache.myqwertycoin.com/",
         "https://02.cache.myqwertycoin.com/",
-        "https://03.cache.myqwertycoin.com/",
-        "https://04.cache.myqwertycoin.com/"
+        "https://03.cache.myqwertycoin.com/"
     ],
     electionApiUrl: "https://voting.qwertycoin.org/api",
     websiteApiUrl: "https://www.qwertycoin.org/wp-json",

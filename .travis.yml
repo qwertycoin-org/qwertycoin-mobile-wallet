@@ -1,34 +1,87 @@
-language: android
-
-notifications:
-  email: false
-
-sudo: false
-
-os:
-  - linux
-  - osx
-node_js:
-  - '6'
-  - '8'
-  - '10'
-
 branches:
   only:
-  - master
+    - master
+#    - develop
 
-install:
-  - npm install
-  - npm install -g cordova
-  - echo y | android update sdk -u --filter android-22,android-23
+env:
+  global:
+    - ANDROID_API_LEVEL=28
+    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+    - TERM=dumb # Keep gradle from crapping all over the log
+    - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
-before_script:
-  - cordova platform rm android
-  - cordova platform add android
+matrix:
+  include:
+    - os: linux
+      sudo: false
+      language: android
+      android:
+        components:
+          - tools
+          - platform-tools
+          - tools
+          - build-tools-$ANDROID_BUILD_TOOLS_VERSION
+          - android-$ANDROID_API_LEVEL
+          - extra-google-google_play_services
+          - extra-google-m2repository
+          - extra-android-m2repository
+      addons:
+        apt:
+          sources:
+            - sourceline: deb https://dl.yarnpkg.com/debian/ stable main
+              key_url: https://dl.yarnpkg.com/debian/pubkey.gpg
+          packages:
+            - oracle-java8-installer
+            - oracle-java8-set-default
+            - yarn
+            - jq
+      licenses:
+        - android-sdk-preview-license-.+
+        - android-sdk-license-.+
+        - google-gdk-license-.+
+
+#    - os: osx
+#      language: objective-c
+#      osx_image: xcode10.2
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -f  $HOME/.gradle/caches/transforms-1/transforms-1.lock
+  - rm -rf $HOME/.gradle/caches/3.5/fileHashes/
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/Library/Caches/Yarn/v1/
+    - $HOME/.cache/yarn/v1/
+
+before_install:
+  - export LANG=en_US.UTF-8
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install yarn ios-sim
+    jq ios-deploy cocoapods ; rvm use system ; pod setup ; fi
+  - nvm install 11
+  - yarn global add cordova
+  - mkdir www
+  - yes | sdkmanager "platforms;android-27"
+  - yes | sdkmanager "platforms;android-28"
+
+#before_script:
+#  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/addkeys.sh ; fi
 
 script:
-  - cordova prepare
-  - cordova build android --release -- --ant
-  
-release:
-  - exit 0
+  - yarn install
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh ; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "OiF7P6+gt/yRdDyoJZnkt147eBrhk1tbRLyVekzlx0MRqaJiGhlTg+sf4o0I12Ac371TNImxeQRa/bIdxvk1/WhZtdUSLfjItQ+9mBkq+cxYT+zlhGAQ+CPisgsZfiynHuRT2v7qtVobBA5zECeuZw8Nv0du0xlatqCCUZFci8KdmL3jSZG+f/901J2POBGMf8EYRznkpR43lkcMwa4UgXYWe4tpXCm8mFkFOTt/7WSgcGT4AztVuqvZA2NHDfZecNjkoUrWDSCSk8Z5dmEHNZ+ssDXREQ99xXNkjdV9Q3zNUrEuysYCo2XngAOuZJR0sopmKTlWRdjXf/QeDpfplYr3O9Zh9P6XJabDpJDdM5ryIN/JSqFoqi6DeVV9Szr/xJIhHEckFbmqVwf6U5dyUSzrZkbNBpJHDQfmixppDqMCZCE0EWMaQG8gnosGtBgRiqLmO/TEWNTfveND7QPtEknngiBlkh6TQKQR1XE12HIaDgF9ZXUOcCkXl03x+BXpM72qF99JZxdFg/Ia4TEbdYu8V0QA8DmkshLI3vuUZ11SncqgKoIEFiItFf3Ii5ryXTc0yGwutUZNDMvlKqxancW8M28aHE9LIY1YpHKdHjQe87aJiEX4vWXPmpyaHkJBt481sAs2c69dUSAg22xd5C0Qs8wxp8eXJZweHjq3qR8="
+  file_glob: true
+  file: output/*
+  skip_cleanup: true
+  overwrite: true
+  on:
+    branch: master
+    tags: true

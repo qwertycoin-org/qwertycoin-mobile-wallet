@@ -1,11 +1,11 @@
 /**
  *     Copyright (c) 2019, ExploShot
  *     Copyright (c) 2019, The Qwertycoin Project
- * 
+ *
  *     All rights reserved.
  *     Redistribution and use in source and binary forms, with or without modification,
  *     are permitted provided that the following conditions are met:
- * 
+ *
  *     ==> Redistributions of source code must retain the above copyright notice,
  *         this list of conditions and the following disclaimer.
  *     ==> Redistributions in binary form must reproduce the above copyright notice,
@@ -14,7 +14,7 @@
  *     ==> Neither the name of Qwertycoin nor the names of its contributors
  *         may be used to endorse or promote products derived from this software
  *          without specific prior written permission.
- * 
+ *
  *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  *     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  *     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,55 +28,16 @@
  *     SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import {
-    DestructableView
-} from "../lib/numbersLab/DestructableView";
-import {
-    VueRequireFilter,
-    VueVar,
-    VueWatched
-} from "../lib/numbersLab/VueAnnotate";
-import {
-    TransactionsExplorer
-} from "../model/TransactionsExplorer";
-import {
-    WalletRepository
-} from "../model/WalletRepository";
-import {
-    BlockchainExplorerRpc2,
-    WalletWatchdog
-} from "../model/blockchain/BlockchainExplorerRpc2";
-import {
-    DependencyInjectorInstance
-} from "../lib/numbersLab/DependencyInjector";
-import {
-    Constants
-} from "../model/Constants";
-import {
-    Wallet
-} from "../model/Wallet";
-import {
-    BlockchainExplorer
-} from "../model/blockchain/BlockchainExplorer";
-import {
-    Url
-} from "../utils/Url";
-import {
-    CoinUri
-} from "../model/CoinUri";
-import {
-    AppState
-} from "../model/AppState";
-import {
-    QRReader
-} from "../model/QRReader";
-import {
-    BlockchainExplorerProvider
-} from "../providers/BlockchainExplorerProvider";
-import {
-    Election,
-    Answer
-} from './../model/Elections';
+import {DestructableView} from "../lib/numbersLab/DestructableView";
+import {VueVar} from "../lib/numbersLab/VueAnnotate";
+import {TransactionsExplorer} from "../model/TransactionsExplorer";
+import {BlockchainExplorerRpc2, WalletWatchdog} from "../model/blockchain/BlockchainExplorerRpc2";
+import {DependencyInjectorInstance} from "../lib/numbersLab/DependencyInjector";
+import {Constants} from "../model/Constants";
+import {Wallet} from "../model/Wallet";
+import {Url} from "../utils/Url";
+import {AppState} from "../model/AppState";
+import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
 let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
@@ -118,7 +79,7 @@ class ElectionDetailsView extends DestructableView {
         this.getElections();
     }
 
-    destruct(): Promise < void > {
+    destruct(): Promise<void> {
         clearInterval(this.intervalRefreshElections);
         return super.destruct();
     }
@@ -180,10 +141,10 @@ class ElectionDetailsView extends DestructableView {
                         address: destinationAddress,
                         amount: amountToSend
                     }], self.paymentId, wallet, blockchainHeight,
-                    function (numberOuts: number): Promise < any[] > {
+                    function (numberOuts: number): Promise<any[]> {
                         return blockchainExplorer.getRandomOuts(numberOuts);
                     },
-                    function (amount: number, feesAmount: number): Promise < void > {
+                    function (amount: number, feesAmount: number): Promise<void> {
                         if (amount + feesAmount > wallet.unlockedAmount(blockchainHeight)) {
                             swal({
                                 type: 'error',
@@ -197,7 +158,7 @@ class ElectionDetailsView extends DestructableView {
                             throw '';
                         }
 
-                        return new Promise < void > (function (resolve, reject) {
+                        return new Promise<void>(function (resolve, reject) {
                             setTimeout(function () { //prevent bug with swal when code is too fast
                                 swal({
                                     title: i18n.t('sendPage.confirmTransactionModal.title'),
