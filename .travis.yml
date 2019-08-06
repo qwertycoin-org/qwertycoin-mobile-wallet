@@ -1,8 +1,3 @@
-branches:
-  only:
-    - master
-#    - develop
-
 env:
   global:
     - ANDROID_API_LEVEL=28
