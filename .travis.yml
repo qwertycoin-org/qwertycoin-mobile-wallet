@@ -58,6 +58,8 @@ before_install:
   - nvm install 11
   - yarn global add cordova
   - mkdir www
+  - cp -R src/. www
+  - cp -R config/. www
   - yes | sdkmanager "platforms;android-27"
   - yes | sdkmanager "platforms;android-28"
 
