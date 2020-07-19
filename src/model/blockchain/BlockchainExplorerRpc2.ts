@@ -198,7 +198,7 @@ export class WalletWatchdog {
 
         for (let tr of transactions) {
             if (typeof tr.height !== 'undefined')
-                if (tr.height >= this.wallet.lastHeight) {
+                if (tr.height > this.wallet.lastHeight) {
                     transactionsToAdd.push(tr);
                 }
         }
@@ -252,16 +252,18 @@ export class WalletWatchdog {
                 }
                 self.explorer.getTransactionsForBlocks(previousStartBlock).then(function (transactions: RawDaemonTransaction[]) {
                     //to ensure no pile explosion
-                    self.processTransactions(transactions);
                     if (transactions.length > 0) {
                         let lastTx = transactions[transactions.length - 1];
                         if (typeof lastTx.height !== 'undefined') {
                             self.lastBlockLoading = lastTx.height + 1;
                         }
                     }
+
+                    self.processTransactions(transactions);
+
                     setTimeout(function () {
                         self.loadHistory();
-                    }, 50);
+                    }, 1);
                 }).catch(function () {
                     setTimeout(function () {
                         self.loadHistory();
@@ -341,19 +343,8 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
             let finalTxs: any[] = [];
             let blockTimes: any[] = [];
 
-            let tempHeight;
             let height = startBlock;
-            let operator = 5;
-            if (self.heightCache - startBlock > operator) {
-                tempHeight = startBlock + operator;
-            } else {
-                tempHeight = self.heightCache;
-            }
-/*
-            for (let height = startBlock; height <= tempHeight; height++) {
 
-            }
-*/
             self.postData(self.nodeAddress + 'json_rpc', {
                 "jsonrpc": "2.0",
                 "id": 0,
@@ -451,8 +442,6 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                 }
                 reject(error);
             });
-
-
         });
     }
 
