@@ -5,6 +5,15 @@ global.config = {
 		"https://02.cache.myqwertycoin.com/",
 		"https://03.cache.myqwertycoin.com/"
 	],
+	nodeList: [
+		"http://node-00.qwertycoin.org:8197/",
+		"http://node-01.qwertycoin.org:8197/",
+		"http://node-02.qwertycoin.org:8197/",
+		"http://node-03.qwertycoin.org:8197/",
+		"http://node-04.qwertycoin.org:8197/",
+		"http://node-05.qwertycoin.org:8197/",
+		"http://148.251.115.233:8197/"
+	],
 	electionApiUrl: "https://voting.qwertycoin.org/api",
 	websiteApiUrl: "https://www.qwertycoin.org/wp-json",
 	mainnetExplorerUrl: "https://explorer.qwertycoin.org/",

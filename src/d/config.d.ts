@@ -1,5 +1,6 @@
 declare var config: {
 	apiUrl: string[],
+	nodeList: string[],
 	electionApiUrl: string,
 	websiteApiUrl: string,
 	mainnetExplorerUrl: string,

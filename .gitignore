@@ -10,10 +10,13 @@ requests/
 
 src/*.js
 src/d/*.js
-src/lib/numberslab/*.js
+src/lib/numbersLab/*.js
 src/model/*.js
 src/model/blockchain/*.js
 src/pages/*.js
 src/providers/*.js
 src/utils/*.js
 src/workers/*.js
+
+dummy-wallet.txt
+build.sh

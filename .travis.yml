@@ -62,6 +62,8 @@ before_install:
   - cp -R config/. www
   - yes | sdkmanager "platforms;android-27"
   - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-29"
+  - yes | sdkmanager "platforms;android-30"
 
 #before_script:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/addkeys.sh ; fi
