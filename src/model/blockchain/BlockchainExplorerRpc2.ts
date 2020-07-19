@@ -50,6 +50,7 @@ export class WalletWatchdog {
         this.workerProcessing.onmessage = function (data: MessageEvent) {
             let message: string | any = data.data;
             if (Constants.DEBUG_STATE) {
+                console.log("InitWorker message: ");
                 console.log(message);
             }
             if (message === 'ready') {
@@ -60,8 +61,12 @@ export class WalletWatchdog {
                 if (message.type === 'processed') {
                     let transactions = message.transactions;
                     if (transactions.length > 0) {
-                        for (let tx of transactions)
+                        for (let tx of transactions) {
+                            if (Constants.DEBUG_STATE) {
+                                console.log(`Adding new tx ${tx.hash} to the wallet`);
+                            }
                             self.wallet.addNew(Transaction.fromRaw(tx));
+                        }
                         self.signalWalletUpdate();
                     }
                     if (self.workerCurrentProcessing.length > 0) {
@@ -164,7 +169,7 @@ export class WalletWatchdog {
 
         //we destroy the worker in charge of decoding the transactions every 250 transactions to ensure the memory is not corrupted
         //cnUtil bug, see https://github.com/mymonero/mymonero-core-js/issues/8
-        if (this.workerCountProcessed >= 50) {
+        if (this.workerCountProcessed >= 75) {
             if (Constants.DEBUG_STATE) {
                 console.log('Recreate worker..');
             }
@@ -193,7 +198,7 @@ export class WalletWatchdog {
 
         for (let tr of transactions) {
             if (typeof tr.height !== 'undefined')
-                if (tr.height > this.wallet.lastHeight) {
+                if (tr.height >= this.wallet.lastHeight) {
                     transactionsToAdd.push(tr);
                 }
         }
@@ -217,7 +222,7 @@ export class WalletWatchdog {
         if (this.workerProcessingWorking || !this.workerProcessingReady) {
             setTimeout(function () {
                 self.loadHistory();
-            }, 50);
+            }, 250);
             return;
         }
         if (this.transactionsToProcess.length > 100) {
@@ -243,20 +248,20 @@ export class WalletWatchdog {
                 if (Constants.DEBUG_STATE) {
                     // console.log('=>',self.lastBlockLoading, endBlock, height, startBlock, self.lastBlockLoading);
                     console.log('load block from ' + startBlock);
+                    console.log('previousStartBlock: ' + previousStartBlock)
                 }
                 self.explorer.getTransactionsForBlocks(previousStartBlock).then(function (transactions: RawDaemonTransaction[]) {
                     //to ensure no pile explosion
+                    self.processTransactions(transactions);
                     if (transactions.length > 0) {
                         let lastTx = transactions[transactions.length - 1];
                         if (typeof lastTx.height !== 'undefined') {
                             self.lastBlockLoading = lastTx.height + 1;
                         }
                     }
-
-                    self.processTransactions(transactions);
                     setTimeout(function () {
                         self.loadHistory();
-                    }, 1);
+                    }, 50);
                 }).catch(function () {
                     setTimeout(function () {
                         self.loadHistory();
@@ -337,82 +342,82 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
             let blockTimes: any[] = [];
 
             let tempHeight;
-            let operator = 1;
+            let height = startBlock;
+            let operator = 5;
             if (self.heightCache - startBlock > operator) {
                 tempHeight = startBlock + operator;
             } else {
                 tempHeight = self.heightCache;
             }
-
+/*
             for (let height = startBlock; height <= tempHeight; height++) {
+
+            }
+*/
+            self.postData(self.nodeAddress + 'json_rpc', {
+                "jsonrpc": "2.0",
+                "id": 0,
+                "method": "on_getblockhash",
+                "params": [
+                    height
+                ]
+            }).then(data => {
+                let hash = data.result;
+
                 self.postData(self.nodeAddress + 'json_rpc', {
                     "jsonrpc": "2.0",
                     "id": 0,
-                    "method": "on_getblockhash",
-                    "params": [
-                        height
-                    ]
+                    "method": "f_block_json",
+                    "params": {
+                        "hash": hash
+                    }
                 }).then(data => {
-                    let hash = data.result;
+                    let blockJsonBlock = data.result.block;
+                    let blockTxHashes: any[] = [];
+                    blockTimes[height] = blockJsonBlock.timestamp;
+                    let txs: any[] = blockJsonBlock.transactions;
+                    for (let x = 0; x < txs.length; x++) {
+                        // @ts-ignore
+                        blockTxHashes.push(txs[x].hash);
+                    }
 
-                    self.postData(self.nodeAddress + 'json_rpc', {
-                        "jsonrpc": "2.0",
-                        "id": 0,
-                        "method": "f_block_json",
-                        "params": {
-                            "hash": hash
-                        }
-                    }).then(data => {
-                        let blockJsonBlock = data.result.block;
-                        let blockTxHashes: any[] = [];
-                        blockTimes[height] = blockJsonBlock.timestamp;
-                        let txs: any[] = blockJsonBlock.transactions;
-                        for (let x = 0; x < txs.length; x++) {
-                            // @ts-ignore
-                            blockTxHashes.push(txs[x].hash);
-                        }
+                    txHashesPerBlock[height] = blockTxHashes;
 
-                        txHashesPerBlock[height] = blockTxHashes;
+                    self.postData(self.nodeAddress + 'get_transaction_details_by_hashes', {
+                        "transactionHashes": txHashesPerBlock[height]
+                    }).then(response => {
+                        let parsedResp = response;
+                        let rawTxs = parsedResp['transactions'];
 
-                        self.postData(self.nodeAddress + 'get_transaction_details_by_hashes', {
-                            "transactionHashes": txHashesPerBlock[height]
-                        }).then(response => {
-                            let parsedResp = response;
-                            let rawTxs = parsedResp['transactions'];
+                        if (rawTxs !== null) {
+                            for (let iTx = 0; iTx < rawTxs.length; ++iTx) {
+                                let rawTx = rawTxs[iTx];
+                                let finalTx = rawTx;
 
-                            if (rawTxs !== null) {
-                                for (let iTx = 0; iTx < rawTxs.length; ++iTx) {
-                                    let rawTx = rawTxs[iTx];
-                                    let finalTx = rawTx;
+                                delete finalTx.signatures;
+                                delete finalTx.unlockTime;
+                                delete finalTx.signatureSize;
+                                delete finalTx.ts;
+                                finalTx.global_index_start = outCount;
+                                finalTx.ts = rawTx.timestamp;
+                                finalTx.height = height;
+                                finalTx.hash = rawTx.hash;
+                                finalTxs.push(finalTx);
 
-                                    delete finalTx.signatures;
-                                    delete finalTx.unlockTime;
-                                    delete finalTx.signatureSize;
-                                    delete finalTx.ts;
-                                    finalTx.global_index_start = outCount;
-                                    finalTx.ts = rawTx.timestamp;
-                                    finalTx.height = height;
-                                    finalTx.hash = rawTx.hash;
-                                    finalTxs.push(finalTx);
-
-                                    let vOutCount = finalTx.outputs.length;
-                                    outCount += vOutCount;
-                                }
-
-                                transactions = finalTxs;
-                                resolve(transactions);
+                                let vOutCount = finalTx.outputs.length;
+                                outCount += vOutCount;
                             }
-                        }).catch(error => {
+
+                            transactions = finalTxs;
+
                             if (Constants.DEBUG_STATE) {
-                                console.log('REJECT');
+                                console.log("Show resolvable Tx Hashes");
+                                for (let i = 0; i < transactions.length; i++) {
+                                    console.log(`Tx hash ${transactions[i].hash}`);
+                                }
                             }
-                            try {
-                                console.log(JSON.parse(error.responseText));
-                            } catch (e) {
-                                console.log(e);
-                            }
-                            reject(error);
-                        });
+                            resolve(transactions);
+                        }
                     }).catch(error => {
                         if (Constants.DEBUG_STATE) {
                             console.log('REJECT');
@@ -435,7 +440,19 @@ export class BlockchainExplorerRpc2 implements BlockchainExplorer {
                     }
                     reject(error);
                 });
-            }
+            }).catch(error => {
+                if (Constants.DEBUG_STATE) {
+                    console.log('REJECT');
+                }
+                try {
+                    console.log(JSON.parse(error.responseText));
+                } catch (e) {
+                    console.log(e);
+                }
+                reject(error);
+            });
+
+
         });
     }
 
