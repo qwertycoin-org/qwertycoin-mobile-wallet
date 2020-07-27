@@ -1,6 +1,3 @@
 [submodule "src/translations"]
 	path = src/translations
 	url = https://github.com/qwertycoin-org/translation-mobileweb
-[submodule "api"]
-	path = api
-	url = https://github.com/qwertycoin-org/mowallet-api.git
