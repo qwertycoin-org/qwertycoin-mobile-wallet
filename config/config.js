@@ -2,17 +2,9 @@
 var global = typeof window !== 'undefined' ? window : self;
 global.config = {
     apiUrl: [
-        "https://01.cache.myqwertycoin.com/",
-        "https://02.cache.myqwertycoin.com/",
-        "https://03.cache.myqwertycoin.com/"
+        "https://01-cache.myqwertycoin.com/"
     ],
     nodeList: [
-        "http://node-00.qwertycoin.org:8197/",
-        "http://node-01.qwertycoin.org:8197/",
-        "http://node-02.qwertycoin.org:8197/",
-        "http://node-03.qwertycoin.org:8197/",
-        "http://node-04.qwertycoin.org:8197/",
-        "http://node-05.qwertycoin.org:8197/",
         "http://148.251.115.233:8197/"
     ],
     electionApiUrl: "https://voting.qwertycoin.org/api",
@@ -46,4 +38,7 @@ global.config = {
     coinUriPrefix: 'qwertycoin:',
     avgBlockTime: 120,
     maxBlockNumber: 500000000,
+    remoteNodeFee: 0.25,
+    devFee: 1,
+    devAddress: "QWC1FfPzWYY5aNiPwGSKQJfHz5o5ehsyeEQgCT3tb46nEnUvnw3Dz4NbNSVY5bNvAVTRuHygmcU4hU8ab2SXBigzAFjpVpK9Ky"
 };
