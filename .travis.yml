@@ -56,7 +56,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; brew install yarn ios-sim
     jq ios-deploy cocoapods ; rvm use system ; pod setup ; fi
   - nvm install 12
-  - yarn global add cordova
+  - npm i -g cordova
   - mkdir www
   - cp -R src/. www
   - cp -R config/. www
@@ -69,7 +69,8 @@ before_install:
 #  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/addkeys.sh ; fi
 
 script:
-  - yarn install
+  - npm i
+  - cordova --version
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
 
 deploy:
