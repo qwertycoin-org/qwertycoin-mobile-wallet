@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="org.qwertycoin.alphawallet" version="0.4.4" android-versionCode="36"
+<widget id="org.qwertycoin.alphawallet" version="0.4.5" android-versionCode="36"
         xmlns="http://www.w3.org/ns/widgets"
         xmlns:cdv="http://cordova.apache.org/ns/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android">
