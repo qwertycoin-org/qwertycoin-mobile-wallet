@@ -8,9 +8,7 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import {
-    Context
-} from "./Context";
+import {Context} from "./Context";
 
 export class Logger {
     public static EMERGENCY = 700;
@@ -37,6 +35,7 @@ export class Logger {
         // console.log('Setting logger level to '+level);
         Context.getGlobalContextStorage().logLevel = level;
     }
+
     static get level(): number {
         let level = Context.getGlobalContextStorage().logLevel;
         return level;
@@ -59,24 +58,31 @@ export class Logger {
     public static debug(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.DEBUG, caller, message, context);
     }
+
     public static info(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.INFO, caller, message, context);
     }
+
     public static notice(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.NOTICE, caller, message, context);
     }
+
     public static warning(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.WARNING, caller, message, context);
     }
+
     public static error(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.ERROR, caller, message, context);
     }
+
     public static critical(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.CRITICAL, caller, message, context);
     }
+
     public static alert(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.ALERT, caller, message, context);
     }
+
     public static emergency(caller: any, message: string, context: any = {}) {
         Logger.log(Logger.EMERGENCY, caller, message, context);
     }

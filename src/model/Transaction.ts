@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2018, Gnock
  * Copyright (c) 2018, The Masari Project
@@ -19,8 +18,12 @@ export class TransactionOut {
     keyImage: string = '';
     outputIdx: number = 0;
     globalIndex: number = 0;
-	ephemeralPub:string='';
+
+    ephemeralPub: string = '';
     pubKey: string = '';
+    rtcOutPk: string = '';
+    rtcMask: string = '';
+    rtcAmount: string = '';
 
     static fromRaw(raw: any) {
         let nout = new TransactionOut();
@@ -28,8 +31,13 @@ export class TransactionOut {
         nout.outputIdx = raw.outputIdx;
         nout.globalIndex = raw.globalIndex;
         nout.amount = raw.amount;
+
+        if (typeof raw.ephemeralPub !== 'undefined') nout.ephemeralPub = raw.ephemeralPub;
         if (typeof raw.pubKey !== 'undefined') nout.pubKey = raw.pubKey;
-		if (typeof raw.ephemeralPub !== 'undefined') nout.ephemeralPub = raw.ephemeralPub;
+        if (typeof raw.rtcOutPk !== 'undefined') nout.rtcOutPk = raw.rtcOutPk;
+        if (typeof raw.rtcMask !== 'undefined') nout.rtcMask = raw.rtcMask;
+        if (typeof raw.rtcAmount !== 'undefined') nout.rtcAmount = raw.rtcAmount;
+
         return nout;
     }
 
@@ -40,6 +48,10 @@ export class TransactionOut {
             globalIndex: this.globalIndex,
             amount: this.amount,
         };
+        if (this.rtcOutPk !== '') data.rtcOutPk = this.rtcOutPk;
+        if (this.rtcMask !== '') data.rtcMask = this.rtcMask;
+        if (this.rtcAmount !== '') data.rtcAmount = this.rtcAmount;
+        if (this.ephemeralPub !== '') data.ephemeralPub = this.ephemeralPub;
         if (this.pubKey !== '') data.pubKey = this.pubKey;
 
         return data;
@@ -140,17 +152,22 @@ export class Transaction {
         return amount;
     }
 
+    isCoinbase() {
+        return this.outs.length == 1 && this.outs[0].rtcAmount === '';
+    }
+
     isConfirmed(blockchainHeight: number) {
-        if (this.blockHeight + config.txMinConfirms < blockchainHeight) {
+        if (this.isCoinbase() && this.blockHeight + config.txCoinbaseMinConfirms < blockchainHeight) {
+            return true;
+        } else if (!this.isCoinbase() && this.blockHeight + config.txMinConfirms < blockchainHeight) {
             return true;
         }
         return false;
     }
 
     isFullyChecked() {
-        if (this.getAmount() === 0) return false; //fusion
-        for (let input of this.ins) {
-            if (input.amount < 0)
+        for (let vin of this.ins) {
+            if (vin.amount < 0)
                 return false;
         }
         return true;

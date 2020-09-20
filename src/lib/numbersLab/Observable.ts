@@ -9,41 +9,41 @@
  */
 
 export interface Observer {
-	observe(eventType: string, data: any): void;
+    observe(eventType: string, data: any): void;
 }
 
 export class Observable {
-	static EVENT_MODIFIED = 'modified';
+    static EVENT_MODIFIED = 'modified';
 
-	observers: any = {};
+    observers: any = {};
 
-	addObserver(eventType: string, callback: Function) {
-		if (!(eventType in this.observers)) this.observers[eventType] = [];
-		this.observers[eventType].push(callback);
-	}
+    addObserver(eventType: string, callback: Function) {
+        if (!(eventType in this.observers)) this.observers[eventType] = [];
+        this.observers[eventType].push(callback);
+    }
 
-	removeObserver(eventType: string, callback: Function) {
-		if (!(eventType in this.observers)) return;
+    removeObserver(eventType: string, callback: Function) {
+        if (!(eventType in this.observers)) return;
 
-		for (let i in this.observers[eventType]) {
-			if (this.observers[eventType][i] == callback) {
-				this.observers[eventType].splice(i, 1);
-				break;
-			}
-		}
-	}
+        for (let i in this.observers[eventType]) {
+            if (this.observers[eventType][i] == callback) {
+                this.observers[eventType].splice(i, 1);
+                break;
+            }
+        }
+    }
 
-	notify(eventType: string = Observable.EVENT_MODIFIED, data: any = null) {
-		if (!(eventType in this.observers)) return;
+    notify(eventType: string = Observable.EVENT_MODIFIED, data: any = null) {
+        if (!(eventType in this.observers)) return;
 
-		let observers = [];
-		for (let i in this.observers[eventType]) {
-			observers.push(this.observers[eventType][i]);
-		}
+        let observers = [];
+        for (let i in this.observers[eventType]) {
+            observers.push(this.observers[eventType][i]);
+        }
 
-		for (let i in observers) {
-			observers[i](eventType, data);
-		}
-	}
+        for (let i in observers) {
+            observers[i](eventType, data);
+        }
+    }
 
 }

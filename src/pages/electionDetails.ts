@@ -31,16 +31,17 @@
 import {DestructableView} from "../lib/numbersLab/DestructableView";
 import {VueVar} from "../lib/numbersLab/VueAnnotate";
 import {TransactionsExplorer} from "../model/TransactionsExplorer";
-import {BlockchainExplorerRpc2, WalletWatchdog} from "../model/blockchain/BlockchainExplorerRpc2";
 import {DependencyInjectorInstance} from "../lib/numbersLab/DependencyInjector";
 import {Constants} from "../model/Constants";
 import {Wallet} from "../model/Wallet";
 import {Url} from "../utils/Url";
 import {AppState} from "../model/AppState";
 import {BlockchainExplorerProvider} from "../providers/BlockchainExplorerProvider";
+import {BlockchainExplorer} from "../model/blockchain/BlockchainExplorer";
+import {WalletWatchdog} from "../model/WalletWatchdog";
 
 let wallet: Wallet = DependencyInjectorInstance().getInstance(Wallet.name, 'default', false);
-let blockchainExplorer: BlockchainExplorerRpc2 = BlockchainExplorerProvider.getInstance();
+let blockchainExplorer: BlockchainExplorer = BlockchainExplorerProvider.getInstance();
 
 AppState.enableLeftMenu();
 
@@ -189,14 +190,14 @@ class ElectionDetailsView extends DestructableView {
                     }).then(function (rawTxData: {
                     raw: {
                         hash: string,
-                        prvKey: string,
+                        prvkey: string,
                         raw: string
                     },
                     signed: any
                 }) {
                     blockchainExplorer.sendRawTx(rawTxData.raw.raw).then(function () {
                         //save the tx private key
-                        wallet.addTxPrivateKeyWithTxHash(rawTxData.raw.hash, rawTxData.raw.prvKey);
+                        wallet.addTxPrivateKeyWithTxHash(rawTxData.raw.hash, rawTxData.raw.prvkey);
 
                         //force a mempool check so the user is up to date
                         let watchdog: WalletWatchdog = DependencyInjectorInstance().getInstance(WalletWatchdog.name);

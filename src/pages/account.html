@@ -1,97 +1,112 @@
 <div id="app" class="body-root" v-cloak="">
-	<div class="body-header">
-		<div class="header-title">
-			<i class="fa fa-bank" aria-hidden="true"></i> {{ $t("accountPage.title") }}
-		</div>
-		<!--
-		<div class="header-subtitle" >
-			{{ $t("accountPage.subtitle") }}
-		</div>
-		-->
+    <div class="body-header">
+        <div class="header-title">
+            <i class="fa fa-bank" aria-hidden="true"></i> {{ $t("accountPage.title") }}
+        </div>
+        <!--<div class="header-subtitle" >
+            {{ $t("accountPage.subtitle") }}
+        </div>-->
 
-	</div>
-	<div class="body-content">
-		<div class="panel-balance">
-			<div class="body">
-				<div class="header-title">{{ $t("accountPage.balanceBlock.title") }}</div>
-				<div class="content">
-					<span class="walletAmount">{{ $n(walletAmount / currencyDivider) }}</span> QWC <br/>
-					<span class="walletAmountCurrency">{{ $n(walletAmountCurrency / currencyDivider) }} {{ $t("accountPage.currencyBlock."+countrycurrency) }}</span>
-					<template class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
-						<br />{{ $t("accountPage.balanceBlock.unlocked") }}: <span
-							class="walletAmount">{{ $n(unlockedWalletAmount / currencyDivider) }}</span> QWC
-					</template>
-				</div>
-			</div>
-		</div>
+    </div>
+    <div class="body-content">
+        <div class="panel-balance">
+            <div class="body">
+                <!--                <div class="header-title">{{ $t("accountPage.balanceBlock.title") }}</div>-->
+                <div class="content">
+                    <span class="walletAmount">{{ $n(walletAmount / currencyDivider) }} QWC</span>
+                    <span class="btcValue" v-if="geckoCurrentPrice.market_data != null">
+						{{ (geckoCurrentPrice.market_data.current_price.btc) * (walletAmount / currencyDivider) | satoshis}}
+                        <span class="currency-positive"
+                              v-if="geckoCurrentPrice.market_data.price_change_percentage_24h_in_currency.btc > 0">(+{{ $n(geckoCurrentPrice.market_data.price_change_percentage_24h_in_currency.btc) }} %)</span>
+                        <span class="currency-negative"
+                              v-if="geckoCurrentPrice.market_data.price_change_percentage_24h_in_currency.btc < 0">({{ $n(geckoCurrentPrice.market_data.price_change_percentage_24h_in_currency.btc) }} %)</span>
+					</span>
+                    <span class="USDValue" v-if="geckoCurrentPrice.market_data != null">
+						<span v-for="(value, key) in geckoCurrentPrice.market_data.current_price"
+                              v-if="key == currency">
+							{{ (value) * (walletAmount / currencyDivider) | fiat(currency) }}
+                            <span v-for="(value, key) in geckoCurrentPrice.market_data.price_change_percentage_24h_in_currency"
+                                  v-if="key == currency">
+                                <span class="currency-positive" v-if="value > 0">( +{{$n(value)}} %)</span>
+                                <span class="currency-negative" v-if="value < 0">( {{$n(value)}} %)</span>
+                            </span>
+						</span>
+					</span>
+                    <template class="amount unlocked" v-if="unlockedWalletAmount !== walletAmount">
+                        <br/>{{ $t("accountPage.balanceBlock.unlocked") }}: <span
+                            class="walletAmount">{{ $n(unlockedWalletAmount / currencyDivider) }} QWC</span>
+                    </template>
+                </div>
+            </div>
+        </div>
 
-		<div class="panel-balance inline" v-if="currentScanBlock+2 < blockchainHeight">
-			<div class="progress">
-				<div class="bar" :style="'width:'+((currentScanBlock+1)/blockchainHeight*100 | 0)+'%'">
-					{{(((currentScanBlock+1)/blockchainHeight*1000 | 0) / 10)}}%</div>
-				<label>
-					{{ $t("accountPage.synchronizingBlock.text") }} 
-					<span class="currentScanBlock">{{currentScanBlock+1}}</span>
-						/
-					<span class="blockchainHeight">{{blockchainHeight}}</span>
-				</label>
-			</div>
-		</div>
+        <div class="panel-balance inline" v-if="currentScanBlock+2 < blockchainHeight">
+            <div class="progress">
+                <div class="bar" :style="'width:'+((currentScanBlock+1)/blockchainHeight*100 | 0)+'%'">
+                    {{(((currentScanBlock+1)/blockchainHeight*1000 | 0) / 10)}}%
+                </div>
+                <label>
+                    {{ $t("accountPage.synchronizingBlock.text") }}
+                    <span class="currentScanBlock">{{currentScanBlock+1}}</span>
+                    /
+                    <span class="blockchainHeight">{{blockchainHeight}}</span>
+                </label>
+            </div>
+        </div>
 
-
-
-		<div class="panel nopadding">
-			<div class="body">
-				<div class="header-title">{{ $t("accountPage.historyBlock.title") }}</div>
-				<div class="content">
-					<div class="transactions" id="accountTransactions">
-						<table>
-							<template v-for="transaction of transactions" v-if="transaction.isFullyChecked()">
-								<tr class="transaction" :class="(transaction.blockHeight === 0 ? 'pending' : '')">
-									<td class="direction">
-										<i v-if="transaction.ins.length == 0" class="fa fa-level-down"
-											aria-hidden="true"></i>
-										<i v-else="" class="fa fa-level-up" aria-hidden="true"></i>
-									</td>
-									<!--LEfT
-									<td class="timestamp" v-if="transaction.blockHeight > 0">
-											{{$d(new Date(transaction.timestamp*1000), 'long')}}</td>
-										<td class="timestamp" v-else="">
-											{{ $t("accountPage.historyBlock.pendingTxStatus") }}...</td>
-									-->
-									<td :class="'amount '+(transaction.getAmount() > 0 ? 'more' : 'less')">
-										{{ $n(transaction.getAmount() / currencyDivider) }} QWC</td>
-									<td class="moreInfo">
-										<i class="fa fa-search" aria-hidden="true"
-											@click="moreInfoOnTx2(transaction)"></i>
-									</td>
-								</tr>
-								<!--
-								<tr v-if="transaction.paymentId !== ''">
-									<td colspan="4" class="paymentId">{{transaction.paymentId}}</td>
-								</tr>
-								-->
-							</template>
-							<tr v-if="transactions.length == 0">
-								<td colspan="4" class="noTransactions">
-									{{ $t("accountPage.historyBlock.emptyWallet") }}<br />
-									<span v-if="currentScanBlock+1 !== blockchainHeight">
+        <div class="panel nopadding">
+            <div class="body">
+                <div class="header-title">{{ $t("accountPage.historyBlock.title") }}</div>
+                <div class="content">
+                    <div class="transactions" id="accountTransactions">
+                        <table>
+                            <template v-for="transaction of transactions" v-if="transaction.isFullyChecked()">
+                                <tr class="transaction" :class="(transaction.blockHeight === 0 ? 'pending' : '')">
+                                    <td class="direction">
+                                        <i v-if="transaction.ins.length == 0" class="fa fa-level-down"
+                                           aria-hidden="true"></i>
+                                        <i v-else="" class="fa fa-level-up" aria-hidden="true"></i>
+                                    </td>
+                                    <!--LEfT
+                                    <td class="timestamp" v-if="transaction.blockHeight > 0">
+                                            {{$d(new Date(transaction.timestamp*1000), 'long')}}</td>
+                                        <td class="timestamp" v-else="">
+                                            {{ $t("accountPage.historyBlock.pendingTxStatus") }}...</td>
+                                    -->
+                                    <td :class="'amount '+(transaction.getAmount() > 0 ? 'more' : 'less')">
+                                        {{ $n(transaction.getAmount() / currencyDivider) }} QWC
+                                    </td>
+                                    <td class="moreInfo">
+                                        <i class="fa fa-search" aria-hidden="true"
+                                           @click="moreInfoOnTx(transaction)"></i>
+                                    </td>
+                                </tr>
+                                <!--
+                                <tr v-if="transaction.paymentId !== ''">
+                                    <td colspan="4" class="paymentId">{{transaction.paymentId}}</td>
+                                </tr>
+                                -->
+                            </template>
+                            <tr v-if="transactions.length == 0">
+                                <td colspan="4" class="noTransactions">
+                                    {{ $t("accountPage.historyBlock.emptyWallet") }}<br/>
+                                    <span v-if="currentScanBlock+1 !== blockchainHeight">
 										{{ $t("accountPage.historyBlock.waitSync") }}
 										<template v-if="blockchainHeight - currentScanBlock > 100000">
-											<br />{{ $t("accountPage.historyBlock.beReallyPatient") }}
+											<br/>{{ $t("accountPage.historyBlock.beReallyPatient") }}
 										</template>
 									</span><br>
-									<div class="actions tc">
-										<a href="#receive"
-											class="btn">{{ $t("accountPage.historyBlock.getCoinAddress") }}</a>
-									</div>
-								</td>
-							</tr>
-						</table>
-					</div>
+                                    <div class="actions tc">
+                                        <a href="#receive"
+                                           class="btn">{{ $t("accountPage.historyBlock.getCoinAddress") }}</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
