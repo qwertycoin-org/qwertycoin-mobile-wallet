@@ -2,9 +2,10 @@
 
 set -e
 
-if [[ "$TRAVIS_BRANCH" == "develop" ]]
+if [[ "$TRAVIS_BRANCH" == "testnet" ]]
 then
-    echo "Skipping package Android for develop branch"
+    mkdir -p output
+    cp platforms/android/app/build/outputs/apk/debug/app-debug.apk output/qwertycoin-mobile-wallet-debug.apk
     exit
 fi
 

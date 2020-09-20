@@ -4,7 +4,7 @@ set -e
 
 cordova platform add android --nofetch
 
-if [[ "$TRAVIS_BRANCH" == "develop" ]]
+if [[ "$TRAVIS_BRANCH" == "testnet" ]]
 then
     cordova build android
 else
