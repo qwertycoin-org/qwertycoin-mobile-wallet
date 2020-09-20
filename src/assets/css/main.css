@@ -355,11 +355,27 @@ body.transparent #copyright {
 }
 
 .walletAmount {
-	font-size: 7vw;
+	display: block;
+	font-size: 1.4rem;
+	font-weight: bold;
 }
 
-.walletAmountCurrency {
-	font-size: 5vw;
+.btcValue {
+	font-size: 1rem;
+	display: block;
+}
+
+.currency-positive {
+	color: #4cb860 !important;
+}
+
+.currency-negative {
+	color: #9f3a38 !important;
+}
+
+.USDValue {
+	display: block;
+	font-size: 1rem;
 }
 
 .contacts table {
@@ -1113,7 +1129,7 @@ body {
 
 .panel-balance {
 	background: #252565 !important;
-	/* border-radius: 5px; */
+	border-radius: 0px 0px 3rem 0px;
 	padding: 32px 40px 32px 40px;
 
 	-webkit-box-shadow: 0 10px 5px 0 #DFE3EC;
@@ -1136,7 +1152,8 @@ body {
 .panel-balance.inline {
 	background: transparent !important;
 	padding: 2vh 40px 2vh 40px;
-	border: 1px solid #D6DDED;
+	border-bottom: 1px solid #D6DDED;
+	border-radius: 0 !important;
 	box-shadow: none;
 	-webkit-box-shadow: none;
 	margin-bottom: 30px;
