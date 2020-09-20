@@ -1,1 +1,0 @@
-cordova build && cordova run android

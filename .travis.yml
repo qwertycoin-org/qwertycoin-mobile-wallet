@@ -1,7 +1,7 @@
 env:
   global:
-    - ANDROID_API_LEVEL=28
-    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+    - ANDROID_API_LEVEL=30
+    - ANDROID_BUILD_TOOLS_VERSION=30.0.2
     - TERM=dumb # Keep gradle from crapping all over the log
     - JAVA_HOME=/usr/lib/jvm/java-8-oracle
 
@@ -70,7 +70,6 @@ before_install:
 
 script:
   - yarn install
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./travis/build-ios.sh && ./travis/package-ios.sh ; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then ./travis/build-android.sh && ./travis/package-android.sh ; fi
 
 deploy:

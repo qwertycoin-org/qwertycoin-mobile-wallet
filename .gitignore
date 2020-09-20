@@ -1,4 +1,5 @@
 .idea
+.gradle
 *.iml
 node_modules
 platforms
@@ -19,4 +20,4 @@ src/utils/*.js
 src/workers/*.js
 
 dummy-wallet.txt
-build.sh
+scripts/build.sh
