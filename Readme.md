@@ -72,7 +72,8 @@ cordova run android
 
 ## Our app is now available on Google Play:
 
-<a href="https://play.google.com/store/apps/details?id=org.qwertycoin.wallet"><img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" width="200"></a>
+The former Google Play listing has been removed. Do not install copies from
+third-party app stores or APK mirrors.
 
 ## Donate <a name="donate"></a>
 
